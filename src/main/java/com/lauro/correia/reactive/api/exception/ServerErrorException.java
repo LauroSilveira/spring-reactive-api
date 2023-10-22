@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class ServerErrorException extends RuntimeException {
 
-    private final CustomApiError customApiError;
-    public ServerErrorException(String message, CustomApiError customApiError) {
+    private final CustomMessageApiError customMessageApiError;
+    public ServerErrorException(String message, CustomMessageApiError customMessageApiError) {
         super(message);
-        this.customApiError = customApiError;
+        this.customMessageApiError = customMessageApiError;
     }
 }

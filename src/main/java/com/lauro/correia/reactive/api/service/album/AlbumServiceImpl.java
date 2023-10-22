@@ -1,6 +1,6 @@
 package com.lauro.correia.reactive.api.service.album;
 
-import com.lauro.correia.reactive.api.exception.CustomApiError;
+import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.album.AlbumNotFoundException;
 import com.lauro.correia.reactive.api.model.Album;
@@ -30,10 +30,10 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse response) {
-        return Mono.error(new AlbumNotFoundException("Album Not Found", CustomApiError.builder().build()));
+        return Mono.error(new AlbumNotFoundException("Album Not Found", CustomMessageApiError.builder().build()));
     }
 
     private Mono<? extends Throwable> handleServerError(final ClientResponse response) {
-        return Mono.error(new ServerErrorException("Internal Server error", CustomApiError.builder().build()));
+        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiError.builder().build()));
     }
 }

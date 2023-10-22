@@ -1,6 +1,6 @@
 package com.lauro.correia.reactive.api.service.post;
 
-import com.lauro.correia.reactive.api.exception.CustomApiError;
+import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.post.PostNotFoundException;
 import com.lauro.correia.reactive.api.model.Post;
@@ -30,10 +30,10 @@ public class PostServiceImpl implements PostService {
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse response) {
-        return Mono.error(new PostNotFoundException("Post Not Found", CustomApiError.builder().build()));
+        return Mono.error(new PostNotFoundException("Post Not Found", CustomMessageApiError.builder().build()));
     }
 
     private Mono<? extends Throwable> handleServerError(final ClientResponse response) {
-        return Mono.error(new ServerErrorException("Internal Server error", CustomApiError.builder().build()));
+        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiError.builder().build()));
     }
 }

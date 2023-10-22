@@ -1,9 +1,6 @@
 package com.lauro.correia.reactive.api.service;
 
 import com.lauro.correia.reactive.api.mapper.UserInfoMapper;
-import com.lauro.correia.reactive.api.model.Album;
-import com.lauro.correia.reactive.api.model.Post;
-import com.lauro.correia.reactive.api.model.UserInfo;
 import com.lauro.correia.reactive.api.service.album.AlbumService;
 import com.lauro.correia.reactive.api.service.post.PostService;
 import com.lauro.correia.reactive.api.service.user.UserService;
@@ -12,9 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -35,10 +29,11 @@ public class RestServicesImpl implements RestService {
     }
 
     public Flux<UserInfoVO> callUserServices(String id) {
-        var user = this.userService.getUserInfo(id, webClient);
-        var post = this.postService.getUserPost(id, webClient);
-        var album = this.albumService.getUserAlbum(id, webClient);
+        final var user = this.userService.getUserInfo(id, webClient);
+        final var post = this.postService.getUserPost(id, webClient);
+        final var album = this.albumService.getUserAlbum(id, webClient);
         return Flux.zip(user, post, album)
-                .map(response -> this.userInfoMapper.mapToUserInfo(response.getT1(), response.getT2(), response.getT3()));
+                .map(response -> this.userInfoMapper.mapToUserInfo(response.getT1(), response.getT2(), response.getT3()))
+                .doOnNext(userInfoVO -> log.info("UserInfoVO complete: {}", userInfoVO));
     }
 }
