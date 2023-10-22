@@ -1,6 +1,6 @@
 package com.lauro.correia.reactive.api.service.user;
 
-import com.lauro.correia.reactive.api.exception.CustomApiError;
+import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
 import com.lauro.correia.reactive.api.model.UserInfo;
@@ -28,10 +28,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse response) {
-        return Mono.error(new UserNotFoundException("User Not Found", CustomApiError.builder().build()));
+        return Mono.error(new UserNotFoundException("User Not Found", CustomMessageApiError.builder().build()));
     }
 
     private Mono<? extends Throwable> handleServerError(final ClientResponse response) {
-        return Mono.error(new ServerErrorException("Internal Server error", CustomApiError.builder().build()));
+        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiError.builder().build()));
     }
 }

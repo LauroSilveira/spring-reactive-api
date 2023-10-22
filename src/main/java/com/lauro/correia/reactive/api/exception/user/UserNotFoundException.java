@@ -1,14 +1,14 @@
 package com.lauro.correia.reactive.api.exception.user;
 
-import com.lauro.correia.reactive.api.exception.CustomApiError;
+import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import lombok.Getter;
 
 @Getter
 public class UserNotFoundException extends RuntimeException {
 
-    private final CustomApiError customApiError;
-    public UserNotFoundException(String message, CustomApiError customApiError) {
+    private final CustomMessageApiError customMessageApiError;
+    public UserNotFoundException(String message, CustomMessageApiError customMessageApiError) {
         super(message);
-        this.customApiError = customApiError;
+        this.customMessageApiError = customMessageApiError;
     }
 }
