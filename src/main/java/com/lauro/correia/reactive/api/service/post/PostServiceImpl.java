@@ -17,8 +17,8 @@ import java.util.List;
 @Slf4j
 public class PostServiceImpl implements PostService {
     @Override
-    public Mono<List<Post>> getUserPost(String id, WebClient webClient) {
-        log.info("[RestServicesImpl] - Getting UserPost for id: [{}]", id);
+    public Mono<List<Post>> getPostInfo(String id, WebClient webClient) {
+        log.info("[UserServiceImpl] - Getting UserPost for id: [{}]", id);
         return webClient.get()
                 .uri("/users/{id}/posts", id)
                 .retrieve()

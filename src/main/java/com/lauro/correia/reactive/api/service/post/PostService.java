@@ -7,5 +7,5 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface PostService {
-    Mono<List<Post>>  getUserPost(String id, WebClient webClient);
+    Mono<List<Post>> getPostInfo(String id, WebClient webClient);
 }

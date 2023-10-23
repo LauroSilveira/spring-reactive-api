@@ -3,7 +3,11 @@ package com.lauro.correia.reactive.api.service.user;
 import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
+import com.lauro.correia.reactive.api.mapper.UserInfoMapper;
 import com.lauro.correia.reactive.api.model.UserInfo;
+import com.lauro.correia.reactive.api.service.album.AlbumService;
+import com.lauro.correia.reactive.api.service.post.PostService;
+import com.lauro.correia.reactive.api.vo.UserInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -15,10 +19,34 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+
+    private final WebClient webClient;
+    private final UserInfoMapper userInfoMapper;
+    private final AlbumService albumService;
+    private final PostService postService;
+
+    public UserServiceImpl(UserInfoMapper userInfoMapper, AlbumService albumService, PostService postService) {
+        this.webClient = WebClient.builder().baseUrl("https://jsonplaceholder.typicode.com").build();
+        this.userInfoMapper = userInfoMapper;
+        this.albumService = albumService;
+        this.postService = postService;
+    }
+
     @Override
-    public Flux<UserInfo> getUserInfo(String id, WebClient webClient) {
+    public Flux<UserInfoVO> getUserInfoComplete(String id) {
+        final var user = this.getUserInfoRest(id);
+        final var post = this.postService.getPostInfo(id, webClient);
+        final var album = this.albumService.getAlbumInfo(id, webClient);
+        return Flux.zip(user, post, album)
+                .map(response -> this.userInfoMapper.mapToUserInfo(response.getT1(), response.getT2(), response.getT3()))
+                .doOnNext(userInfoVO -> log.info("UserInfoVO complete: {}", userInfoVO));
+    }
+
+
+    @Override
+    public Flux<UserInfo> getUserInfoRest(String id) {
         log.info("[UserServiceImpl] - Getting UserInfo for id: [{}]", id);
-        return webClient.get()
+        return this.webClient.get()
                 .uri("/users/{id}", id)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
