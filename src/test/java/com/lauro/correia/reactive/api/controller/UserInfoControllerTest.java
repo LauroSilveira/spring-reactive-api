@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
-import com.lauro.correia.reactive.api.service.RestService;
+import com.lauro.correia.reactive.api.service.user.UserService;
 import com.lauro.correia.reactive.api.vo.UserInfoVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class UserInfoControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private RestService restServices;
+    private UserService restServices;
 
     private static ObjectMapper mapper;
 
@@ -52,7 +52,7 @@ class UserInfoControllerTest {
         final var userInfoVOJsonExpected = mapper.readValue(getJsonFile("response_get_user_info_id_7.json"), new TypeReference<UserInfoVO>() {
         });
 
-        when(this.restServices.callUserServices(anyString()))
+        when(this.restServices.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When
@@ -79,7 +79,7 @@ class UserInfoControllerTest {
     @Test
     void should_return_not_found_test() {
         //Given
-        when(this.restServices.callUserServices(anyString()))
+        when(this.restServices.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.error(new UserNotFoundException("User Not Found", CustomMessageApiError.builder()
                         .msg("User Not Found")
                         .httpStatus(HttpStatus.NOT_FOUND)
@@ -101,7 +101,7 @@ class UserInfoControllerTest {
     @Test
     void should_return_internal_server_error_test() {
         //Given
-        when(this.restServices.callUserServices(anyString()))
+        when(this.restServices.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.error(new ServerErrorException("Internal Server Error", CustomMessageApiError.builder()
                         .msg("Internal Server Error")
                         .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -126,7 +126,37 @@ class UserInfoControllerTest {
         final var userInfoVOJsonExpected = mapper.readValue(getJsonFile("response_get_user_info_id_9.json"), new TypeReference<UserInfoVO>() {
         });
 
-        when(this.restServices.callUserServices(anyString()))
+        when(this.restServices.getUserInfoComplete(anyString()))
+                .thenReturn(Flux.just(userInfoVOJsonExpected));
+
+        //When
+        List<UserInfoVO> responseBody = this.webTestClient.get()
+                .uri("/user/{id}", 9)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserInfoVO.class)
+                .returnResult()
+                .getResponseBody();
+
+        //Then
+        assertNotNull(responseBody);
+        assertFalse(responseBody.isEmpty());
+
+        final var userInfoVO = responseBody.stream().findFirst().get();
+
+        assertEquals(userInfoVOJsonExpected.userId(), userInfoVO.userId());
+        assertEquals(userInfoVOJsonExpected.album().size(), userInfoVO.album().size());
+        assertEquals(userInfoVOJsonExpected.post().size(), userInfoVO.post().size());
+    }
+
+    @Test
+    void shoul_return_user_info_OK_for_id_3_test() throws IOException {
+        //Given
+        final var userInfoVOJsonExpected = mapper.readValue(getJsonFile("response_get_user_info_id_3.json"), new TypeReference<UserInfoVO>() {
+        });
+
+        when(this.restServices.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When

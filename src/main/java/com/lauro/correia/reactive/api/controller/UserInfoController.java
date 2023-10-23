@@ -1,8 +1,8 @@
 package com.lauro.correia.reactive.api.controller;
 
-import com.lauro.correia.reactive.api.service.RestService;
+
+import com.lauro.correia.reactive.api.service.user.UserService;
 import com.lauro.correia.reactive.api.vo.UserInfoVO;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -18,12 +18,12 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 public class UserInfoController {
 
-    private final RestService restService;
+    private final UserService userService;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<UserInfoVO> getUserInfo(@PathVariable("id") String id) {
         log.info("[UserInfoController] getuserInfo for Id: [{}]", id);
-        return this.restService.callUserServices(id);
+        return this.userService.getUserInfoComplete(id);
     }
 
 }
