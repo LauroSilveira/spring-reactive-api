@@ -2,6 +2,7 @@ package com.lauro.correia.reactive.api.controller;
 
 import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.vo.UserInfoVO;
+import com.lauro.correia.reactive.api.vo.UserVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,5 +60,22 @@ class UserInfoControllerITest {
                   assertEquals(HttpStatus.NOT_FOUND, customApiError.getHttpStatus());
                   assertEquals("User Not Found", customApiError.getMsg());
                });
+    }
+
+
+    @Test
+    void get_user_list_response_OK_test() {
+        final var responseBody = this.webTestClient.get()
+                .uri("/user")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserVO.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertNotNull(responseBody);
+        assertFalse(responseBody.isEmpty());
+        assertEquals(10, responseBody.size());
     }
 }

@@ -7,7 +7,9 @@ import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
 import com.lauro.correia.reactive.api.service.user.UserService;
 import com.lauro.correia.reactive.api.vo.UserInfoVO;
+import com.lauro.correia.reactive.api.vo.UserVO;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ class UserInfoControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private UserService restServices;
+    private UserService userService;
 
     private static ObjectMapper mapper;
 
@@ -47,12 +49,13 @@ class UserInfoControllerTest {
     }
 
     @Test
-    void shoul_return_user_info_OK_test() throws IOException {
+    @DisplayName("Return Complete User Info for userId 7")
+    void should_return_user_info_OK_for_id_7_test() throws IOException {
         //Given
         final var userInfoVOJsonExpected = mapper.readValue(getJsonFile("response_get_user_info_id_7.json"), new TypeReference<UserInfoVO>() {
         });
 
-        when(this.restServices.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When
@@ -77,9 +80,10 @@ class UserInfoControllerTest {
     }
 
     @Test
+    @DisplayName("Should return User Not Found")
     void should_return_not_found_test() {
         //Given
-        when(this.restServices.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.error(new UserNotFoundException("User Not Found", CustomMessageApiError.builder()
                         .msg("User Not Found")
                         .httpStatus(HttpStatus.NOT_FOUND)
@@ -99,9 +103,10 @@ class UserInfoControllerTest {
     }
 
     @Test
+    @DisplayName("Return Internal Server Error")
     void should_return_internal_server_error_test() {
         //Given
-        when(this.restServices.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.error(new ServerErrorException("Internal Server Error", CustomMessageApiError.builder()
                         .msg("Internal Server Error")
                         .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -121,12 +126,13 @@ class UserInfoControllerTest {
     }
 
     @Test
-    void shoul_return_user_info_OK_for_id_9_test() throws IOException {
+    @DisplayName("Return Complete User Info for userId 9")
+    void should_return_user_info_OK_for_id_9_test() throws IOException {
         //Given
         final var userInfoVOJsonExpected = mapper.readValue(getJsonFile("response_get_user_info_id_9.json"), new TypeReference<UserInfoVO>() {
         });
 
-        when(this.restServices.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When
@@ -151,12 +157,13 @@ class UserInfoControllerTest {
     }
 
     @Test
-    void shoul_return_user_info_OK_for_id_3_test() throws IOException {
+    @DisplayName("Return Complete User Info for userId 3")
+    void should_return_user_info_OK_for_id_3_test() throws IOException {
         //Given
         final var userInfoVOJsonExpected = mapper.readValue(getJsonFile("response_get_user_info_id_3.json"), new TypeReference<UserInfoVO>() {
         });
 
-        when(this.restServices.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyString()))
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When
@@ -180,9 +187,37 @@ class UserInfoControllerTest {
         assertEquals(userInfoVOJsonExpected.post().size(), userInfoVO.post().size());
     }
 
+    @Test
+    @DisplayName("Return Complete User Info for userId 3")
+    void should_return_user_test() throws IOException {
+        //Given
+        final var usersVO = mapper.readValue(getJsonFile("response_get_all_users.json"), new TypeReference<List<UserVO>>() {
+        });
+
+        when(this.userService.getUsers()).thenReturn(Flux.just(usersVO.get(0)));
+
+        //When
+        List<UserVO> responseBody = this.webTestClient.get()
+                .uri("/user")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserVO.class)
+                .returnResult()
+                .getResponseBody();
+
+        //Then
+        assertNotNull(responseBody);
+        assertFalse(responseBody.isEmpty());
+
+        org.assertj.core.api.Assertions.assertThat(responseBody.stream().findFirst().get())
+                .usingRecursiveComparison()
+                .isEqualTo(usersVO.get(0));
+    }
+
     private static File getJsonFile(String jsonName) {
         try {
-            return ResourceUtils.getFile("src/test/resources/json/" + jsonName);
+            return ResourceUtils.getFile("src/test/resources/json/user/" + jsonName);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("JSON File not found");
         }

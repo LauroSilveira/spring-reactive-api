@@ -4,10 +4,12 @@ import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
 import com.lauro.correia.reactive.api.mapper.UserInfoMapper;
+import com.lauro.correia.reactive.api.model.User;
 import com.lauro.correia.reactive.api.model.UserInfo;
 import com.lauro.correia.reactive.api.service.album.AlbumService;
 import com.lauro.correia.reactive.api.service.post.PostService;
 import com.lauro.correia.reactive.api.vo.UserInfoVO;
+import com.lauro.correia.reactive.api.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -19,14 +21,14 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-
+    public static final String BASE_URL = "https://jsonplaceholder.typicode.com";
     private final WebClient webClient;
     private final UserInfoMapper userInfoMapper;
     private final AlbumService albumService;
     private final PostService postService;
 
     public UserServiceImpl(UserInfoMapper userInfoMapper, AlbumService albumService, PostService postService) {
-        this.webClient = WebClient.builder().baseUrl("https://jsonplaceholder.typicode.com").build();
+        this.webClient = WebClient.builder().baseUrl(BASE_URL).build();
         this.userInfoMapper = userInfoMapper;
         this.albumService = albumService;
         this.postService = postService;
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Flux<UserInfoVO> getUserInfoComplete(String id) {
-        final var user = this.getUserInfoRest(id);
+        final var user = this.getUserInfo(id);
         final var post = this.postService.getPostInfo(id, webClient);
         final var album = this.albumService.getAlbumInfo(id, webClient);
         return Flux.zip(user, post, album)
@@ -44,15 +46,29 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Flux<UserInfo> getUserInfoRest(String id) {
+    public Flux<UserInfo> getUserInfo(String id) {
         log.info("[UserServiceImpl] - Getting UserInfo for id: [{}]", id);
-        return this.webClient.get()
+        return this.webClient
+                .get()
                 .uri("/users/{id}", id)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)
                 .bodyToFlux(UserInfo.class)
                 .doOnNext(userInfo -> log.info("Received UserInfo response: [{}]", userInfo));
+    }
+
+    @Override
+    public Flux<UserVO> getUsers() {
+        log.info("[UserServiceImpl] - Get All Users");
+        return this.webClient.get()
+                .uri("/users")
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
+                .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)
+                .bodyToFlux(User.class)
+                .doOnNext(userInfo -> log.info("Received UserInfo response: [{}]", userInfo))
+                .map(this.userInfoMapper::mapToUser);
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse response) {
