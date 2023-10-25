@@ -1,0 +1,44 @@
+name: CI Workflow
+run-name: ${{ github.actor }} has started workflow
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    ## Set up to use JDK 17
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    ## Build and execute every test
+    - name: Build and test with Maven
+      run: mvn -B package --file pom.xml
+
+    ## Generate Test Report Summary
+    - name: Test Report
+      uses: dorny/test-reporter@v1.6.0
+      if: always()
+      with:
+        name: Test Reporter Summary
+        path: target/surefire-reports/*.xml
+        reporter: java-junit
+
+    ## Jacoco report
+    - name: Add coverage to PR
+      id: jacoco
+      uses: madrapps/jacoco-report@v1.6.1
+      with:
+        paths: |
+          ${{ github.workspace }}/target/site/jacoco/jacoco.xml,
+        token: ${{ secrets.SECRET_TOKEN }}
+        min-coverage-overall: 40
+        min-coverage-changed-files: 60
