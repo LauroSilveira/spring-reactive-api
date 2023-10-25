@@ -1,10 +1,16 @@
 name: CI Workflow
 run-name: ${{ github.actor }} has started workflow
+
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
 
 jobs:
   build:
@@ -22,3 +28,11 @@ jobs:
     ## Build and execute every test
     - name: Build and test with Maven
       run: mvn -B package --file pom.xml
+
+    - name: Test Report
+      uses: dorny/test-reporter@v1.7.0
+      if: success() || failure()
+      with:
+        name: Test Report Summary
+        reporter: java-junit
+        path: target/surefire-reports/*.xml
