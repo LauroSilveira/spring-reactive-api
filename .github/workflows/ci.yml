@@ -27,7 +27,7 @@ jobs:
 
     ## Build and execute every test
     - name: Build and test with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B clean install --file pom.xml
 
     - name: Test Report
       uses: dorny/test-reporter@v1.7.0

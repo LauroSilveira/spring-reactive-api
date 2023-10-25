@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-reactive-api</a> &gt; <a href="index.source.html" class="el_package">com.lauro.correia.reactive.api.service.user</a> &gt; <span class="el_source">UserServiceImpl.java</span></div><h1>UserServiceImpl.java</h1><pre class="source lang-java linenums">package com.lauro.correia.reactive.api.service.user;
+
+import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
+import com.lauro.correia.reactive.api.exception.ServerErrorException;
+import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
+import com.lauro.correia.reactive.api.mapper.UserInfoMapper;
+import com.lauro.correia.reactive.api.model.User;
+import com.lauro.correia.reactive.api.model.UserInfo;
+import com.lauro.correia.reactive.api.service.album.AlbumService;
+import com.lauro.correia.reactive.api.service.post.PostService;
+import com.lauro.correia.reactive.api.vo.UserInfoVO;
+import com.lauro.correia.reactive.api.vo.UserVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Service
+<span class="fc" id="L22">@Slf4j</span>
+public class UserServiceImpl implements UserService {
+    public static final String BASE_URL = &quot;https://jsonplaceholder.typicode.com&quot;;
+    private final WebClient webClient;
+    private final UserInfoMapper userInfoMapper;
+    private final AlbumService albumService;
+    private final PostService postService;
+
+<span class="fc" id="L30">    public UserServiceImpl(UserInfoMapper userInfoMapper, AlbumService albumService, PostService postService) {</span>
+<span class="fc" id="L31">        this.webClient = WebClient.builder().baseUrl(BASE_URL).build();</span>
+<span class="fc" id="L32">        this.userInfoMapper = userInfoMapper;</span>
+<span class="fc" id="L33">        this.albumService = albumService;</span>
+<span class="fc" id="L34">        this.postService = postService;</span>
+<span class="fc" id="L35">    }</span>
+
+    @Override
+    public Flux&lt;UserInfoVO&gt; getUserInfoComplete(String id) {
+<span class="fc" id="L39">        final var user = this.getUserInfo(id);</span>
+<span class="fc" id="L40">        final var post = this.postService.getPostInfo(id, webClient);</span>
+<span class="fc" id="L41">        final var album = this.albumService.getAlbumInfo(id, webClient);</span>
+<span class="fc" id="L42">        return Flux.zip(user, post, album)</span>
+<span class="fc" id="L43">                .map(response -&gt; this.userInfoMapper.mapToUserInfo(response.getT1(), response.getT2(), response.getT3()))</span>
+<span class="fc" id="L44">                .doOnNext(userInfoVO -&gt; log.info(&quot;UserInfoVO complete: {}&quot;, userInfoVO));</span>
+    }
+
+
+    @Override
+    public Flux&lt;UserInfo&gt; getUserInfo(String id) {
+<span class="fc" id="L50">        log.info(&quot;[UserServiceImpl] - Getting UserInfo for id: [{}]&quot;, id);</span>
+<span class="fc" id="L51">        return this.webClient</span>
+<span class="fc" id="L52">                .get()</span>
+<span class="fc" id="L53">                .uri(&quot;/users/{id}&quot;, id)</span>
+<span class="fc" id="L54">                .retrieve()</span>
+<span class="fc" id="L55">                .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)</span>
+<span class="fc" id="L56">                .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)</span>
+<span class="fc" id="L57">                .bodyToFlux(UserInfo.class)</span>
+<span class="fc" id="L58">                .doOnNext(userInfo -&gt; log.info(&quot;Received UserInfo response: [{}]&quot;, userInfo));</span>
+    }
+
+    @Override
+    public Flux&lt;UserVO&gt; getUsers() {
+<span class="fc" id="L63">        log.info(&quot;[UserServiceImpl] - Get All Users&quot;);</span>
+<span class="fc" id="L64">        return this.webClient.get()</span>
+<span class="fc" id="L65">                .uri(&quot;/users&quot;)</span>
+<span class="fc" id="L66">                .retrieve()</span>
+<span class="fc" id="L67">                .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)</span>
+<span class="fc" id="L68">                .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)</span>
+<span class="fc" id="L69">                .bodyToFlux(User.class)</span>
+<span class="fc" id="L70">                .doOnNext(userInfo -&gt; log.info(&quot;Received UserInfo response: [{}]&quot;, userInfo))</span>
+<span class="fc" id="L71">                .map(this.userInfoMapper::mapToUser);</span>
+    }
+
+    private Mono&lt;? extends Throwable&gt; handleClientError(ClientResponse response) {
+<span class="fc" id="L75">        return Mono.error(new UserNotFoundException(&quot;User Not Found&quot;, CustomMessageApiError.builder().build()));</span>
+    }
+
+    private Mono&lt;? extends Throwable&gt; handleServerError(final ClientResponse response) {
+<span class="nc" id="L79">        return Mono.error(new ServerErrorException(&quot;Internal Server error&quot;, CustomMessageApiError.builder().build()));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

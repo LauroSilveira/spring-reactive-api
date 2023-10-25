@@ -1,0 +1,136 @@
+{
+  "userId": "3",
+  "name": "Clementine Bauch",
+  "email": "Nathan@yesenia.net",
+  "address": {
+    "street": "Douglas Extension",
+    "suite": "Suite 847",
+    "city": "McKenziehaven",
+    "zipcode": "59590-4157",
+    "geolocation": {
+      "latitude": "-68.6102",
+      "longetude": "-47.0653"
+    }
+  },
+  "phone": "1-463-123-4447",
+  "website": "ramiro.info",
+  "company": {
+    "name": "Romaguera-Jacobson",
+    "catchPhrase": "Face to face bifurcated interface",
+    "bs": "e-enable strategic applications"
+  },
+  "album": [
+    {
+      "userId": "3",
+      "albumId": "21",
+      "title": "repudiandae voluptatem optio est consequatur rem in temporibus et"
+    },
+    {
+      "userId": "3",
+      "albumId": "22",
+      "title": "et rem non provident vel ut"
+    },
+    {
+      "userId": "3",
+      "albumId": "23",
+      "title": "incidunt quisquam hic adipisci sequi"
+    },
+    {
+      "userId": "3",
+      "albumId": "24",
+      "title": "dolores ut et facere placeat"
+    },
+    {
+      "userId": "3",
+      "albumId": "25",
+      "title": "vero maxime id possimus sunt neque et consequatur"
+    },
+    {
+      "userId": "3",
+      "albumId": "26",
+      "title": "quibusdam saepe ipsa vel harum"
+    },
+    {
+      "userId": "3",
+      "albumId": "27",
+      "title": "id non nostrum expedita"
+    },
+    {
+      "userId": "3",
+      "albumId": "28",
+      "title": "omnis neque exercitationem sed dolor atque maxime aut cum"
+    },
+    {
+      "userId": "3",
+      "albumId": "29",
+      "title": "inventore ut quasi magnam itaque est fugit"
+    },
+    {
+      "userId": "3",
+      "albumId": "30",
+      "title": "tempora assumenda et similique odit distinctio error"
+    }
+  ],
+  "post": [
+    {
+      "userId": "3",
+      "postId": "21",
+      "title": "asperiores ea ipsam voluptatibus modi minima quia sint",
+      "body": "repellat aliquid praesentium dolorem quo\nsed totam minus non itaque\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\ntempora et tenetur expedita sunt"
+    },
+    {
+      "userId": "3",
+      "postId": "22",
+      "title": "dolor sint quo a velit explicabo quia nam",
+      "body": "eos qui et ipsum ipsam suscipit aut\nsed omnis non odio\nexpedita earum mollitia molestiae aut atque rem suscipit\nnam impedit esse"
+    },
+    {
+      "userId": "3",
+      "postId": "23",
+      "title": "maxime id vitae nihil numquam",
+      "body": "veritatis unde neque eligendi\nquae quod architecto quo neque vitae\nest illo sit tempora doloremque fugit quod\net et vel beatae sequi ullam sed tenetur perspiciatis"
+    },
+    {
+      "userId": "3",
+      "postId": "24",
+      "title": "autem hic labore sunt dolores incidunt",
+      "body": "enim et ex nulla\nomnis voluptas quia qui\nvoluptatem consequatur numquam aliquam sunt\ntotam recusandae id dignissimos aut sed asperiores deserunt"
+    },
+    {
+      "userId": "3",
+      "postId": "25",
+      "title": "rem alias distinctio quo quis",
+      "body": "ullam consequatur ut\nomnis quis sit vel consequuntur\nipsa eligendi ipsum molestiae et omnis error nostrum\nmolestiae illo tempore quia et distinctio"
+    },
+    {
+      "userId": "3",
+      "postId": "26",
+      "title": "est et quae odit qui non",
+      "body": "similique esse doloribus nihil accusamus\nomnis dolorem fuga consequuntur reprehenderit fugit recusandae temporibus\nperspiciatis cum ut laudantium\nomnis aut molestiae vel vero"
+    },
+    {
+      "userId": "3",
+      "postId": "27",
+      "title": "quasi id et eos tenetur aut quo autem",
+      "body": "eum sed dolores ipsam sint possimus debitis occaecati\ndebitis qui qui et\nut placeat enim earum aut odit facilis\nconsequatur suscipit necessitatibus rerum sed inventore temporibus consequatur"
+    },
+    {
+      "userId": "3",
+      "postId": "28",
+      "title": "delectus ullam et corporis nulla voluptas sequi",
+      "body": "non et quaerat ex quae ad maiores\nmaiores recusandae totam aut blanditiis mollitia quas illo\nut voluptatibus voluptatem\nsimilique nostrum eum"
+    },
+    {
+      "userId": "3",
+      "postId": "29",
+      "title": "iusto eius quod necessitatibus culpa ea",
+      "body": "odit magnam ut saepe sed non qui\ntempora atque nihil\naccusamus illum doloribus illo dolor\neligendi repudiandae odit magni similique sed cum maiores"
+    },
+    {
+      "userId": "3",
+      "postId": "30",
+      "title": "a quo magni similique perferendis",
+      "body": "alias dolor cumque\nimpedit blanditiis non eveniet odio maxime\nblanditiis amet eius quis tempora quia autem rem\na provident perspiciatis quia"
+    }
+  ]
+}
