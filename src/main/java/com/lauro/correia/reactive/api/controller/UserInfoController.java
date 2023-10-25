@@ -32,5 +32,4 @@ public class UserInfoController {
         log.info("[UserInfoController] getUsers");
         return this.userService.getUsers();
     }
-
 }
