@@ -1,9 +1,7 @@
-name: Generate Docker Image and Publish
-
+name: Publish Docker Image on Docker Hub
 on:
   push:
     tags: [ 'v*.*.*' ]
-
 jobs:
   docker:
     runs-on: ubuntu-latest

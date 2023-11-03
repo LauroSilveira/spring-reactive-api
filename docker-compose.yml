@@ -1,0 +1,11 @@
+services:
+  reactive-api:
+    image: "laurocorreia/reactive-api:latest"
+    container_name: "reactive-api"
+    networks:
+      - compose-brigde
+    ports:
+      - 8080:8080
+networks:
+  compose-bridge:
+    driver: brigde
