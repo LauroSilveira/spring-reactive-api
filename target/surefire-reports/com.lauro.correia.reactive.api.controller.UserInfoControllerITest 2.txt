@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.lauro.correia.reactive.api.controller.UserInfoControllerITest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.252 s - in com.lauro.correia.reactive.api.controller.UserInfoControllerITest
