@@ -17,6 +17,8 @@ HELP.md
 *.iws
 *.iml
 *.ipr
+target/site/**
+target/surefire-reports/**
 
 ### NetBeans ###
 /nbproject/private/

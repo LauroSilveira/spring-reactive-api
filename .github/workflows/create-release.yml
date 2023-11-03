@@ -1,17 +1,14 @@
 name: Create Release
-
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
+      - 'v*'
 jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout branch Master
         uses: actions/checkout@master
       - name: Create Release
         id: create_release
@@ -23,7 +20,6 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Changes in this Release
-            - First Change
-            - Second Change
+            - ${{ github.event.head_commit.message }}
           draft: false
           prerelease: false
