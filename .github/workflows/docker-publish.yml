@@ -1,4 +1,5 @@
-name: Publish Docker Image on Docker Hub
+name: Publish Docker Image to Docker Hub
+run-name: ${{ github.actor }} has started publish docker image
 on:
   push:
     tags: [ 'v*.*.*' ]
