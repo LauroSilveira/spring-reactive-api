@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     private final AlbumService albumService;
     private final PostService postService;
 
-    public UserServiceImpl(UserInfoMapper userInfoMapper, AlbumService albumService, PostService postService) {
-        this.webClient = WebClient.builder().baseUrl(BASE_URL).build();
+    public UserServiceImpl(WebClient webClient, UserInfoMapper userInfoMapper, AlbumService albumService, PostService postService) {
+        this.webClient = webClient;
         this.userInfoMapper = userInfoMapper;
         this.albumService = albumService;
         this.postService = postService;

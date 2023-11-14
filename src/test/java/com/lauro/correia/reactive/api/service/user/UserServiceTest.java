@@ -1,7 +1,13 @@
 package com.lauro.correia.reactive.api.service.user;
 
-import com.lauro.correia.reactive.api.mapper.UserInfoMapperImpl;
-import com.lauro.correia.reactive.api.model.*;
+import com.lauro.correia.reactive.api.mapper.UserInfoMapper;
+import com.lauro.correia.reactive.api.model.Address;
+import com.lauro.correia.reactive.api.model.Album;
+import com.lauro.correia.reactive.api.model.Company;
+import com.lauro.correia.reactive.api.model.Geolocation;
+import com.lauro.correia.reactive.api.model.Post;
+import com.lauro.correia.reactive.api.model.User;
+import com.lauro.correia.reactive.api.model.UserInfo;
 import com.lauro.correia.reactive.api.service.album.AlbumService;
 import com.lauro.correia.reactive.api.service.post.PostService;
 import com.lauro.correia.reactive.api.vo.AddressVO;
@@ -15,6 +21,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -33,10 +40,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest
 class UserServiceTest {
 
     @MockBean
-    private UserInfoMapperImpl userInfoMapper;
+    private UserInfoMapper userInfoMapper;
 
     @MockBean
     private AlbumService albumService;
