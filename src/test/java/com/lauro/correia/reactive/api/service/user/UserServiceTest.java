@@ -1,47 +1,39 @@
 package com.lauro.correia.reactive.api.service.user;
 
+import com.lauro.correia.reactive.api.config.WebClientResponseSpec;
 import com.lauro.correia.reactive.api.mapper.UserInfoMapper;
-import com.lauro.correia.reactive.api.model.Address;
 import com.lauro.correia.reactive.api.model.Album;
-import com.lauro.correia.reactive.api.model.Company;
-import com.lauro.correia.reactive.api.model.Geolocation;
 import com.lauro.correia.reactive.api.model.Post;
 import com.lauro.correia.reactive.api.model.User;
 import com.lauro.correia.reactive.api.model.UserInfo;
 import com.lauro.correia.reactive.api.service.album.AlbumService;
 import com.lauro.correia.reactive.api.service.post.PostService;
-import com.lauro.correia.reactive.api.vo.AddressVO;
-import com.lauro.correia.reactive.api.vo.AlbumVO;
-import com.lauro.correia.reactive.api.vo.CompanyVO;
-import com.lauro.correia.reactive.api.vo.GeolocationVO;
-import com.lauro.correia.reactive.api.vo.PostVO;
+import com.lauro.correia.reactive.api.utils.JsonUtils;
 import com.lauro.correia.reactive.api.vo.UserInfoVO;
 import com.lauro.correia.reactive.api.vo.UserVO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
-class UserServiceTest {
+class UserServiceTest extends JsonUtils {
 
     @MockBean
     private UserInfoMapper userInfoMapper;
@@ -55,7 +47,7 @@ class UserServiceTest {
     @SpyBean
     private UserServiceImpl userService;
 
-    @Mock
+    @MockBean
     private WebClient webClient;
 
     @Mock
@@ -70,21 +62,30 @@ class UserServiceTest {
     @Mock
     private WebClient.RequestHeadersUriSpec requestHeadersUriSpecMock;
 
-    @Mock
-    private WebClient.ResponseSpec responseSpecMock;
+    @MockBean
+    private WebClientResponseSpec responseSpecMock;
 
 
     @Test
     void get_user_info_complete_test() {
         //Given
-        when(this.userService.getUserInfo(anyString()))
-                .thenReturn(Flux.just(buildUserInfo()));
-        when(this.postService.getPostInfo(anyString(), any()))
-                .thenReturn(Mono.just(List.of(buildPostInfo())));
-        when(this.albumService.getAlbumInfo(anyString(), any()))
-                .thenReturn(Mono.just(List.of(buildAlbumInfo())));
-        when(this.userInfoMapper.mapToUserInfo(any(), anyList(), anyList()))
-                .thenReturn(buildUserInfoVO());
+        final var posts = parseToJavaObject(getJsonFile("post/response_getPostsByUserId_1.json"), Post[].class);
+        when(this.postService.getPosts(anyString())).thenReturn(Mono.just(Arrays.stream(posts).toList()));
+
+        final var albums = parseToJavaObject(getJsonFile("album/response_getAlbumByUserId_1.json"), Album[].class);
+        when(this.albumService.getAlbumInfo(anyString())).thenReturn(Mono.just(Arrays.stream(albums).toList()));
+
+        final var userInfo = parseToJavaObject(getJsonFile("user/response_getUserInfo_id_3.json"), UserInfo.class);
+        when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}", "3")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+        when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
+        when(responseSpecMock.onStatus(Mockito.any(Predicate.class), Mockito.any(Function.class))).thenCallRealMethod();
+        when(responseSpecMock.bodyToFlux(UserInfo.class)).thenReturn(Flux.just(userInfo));
+
+        final var userInfoComplete = parseToJavaObject(getJsonFile("user/response_getUserInfoComplete_id_3.json"), UserInfoVO.class);
+        when(this.userInfoMapper.mapToUserInfo(any(), anyList(), anyList())).thenReturn(userInfoComplete);
+
         //When
         final var userInfoVO = this.userService.getUserInfoComplete("3").blockLast();
 
@@ -99,10 +100,13 @@ class UserServiceTest {
     @Test
     void get_user_info_test() {
         //Given
+        final var userInfoJson = parseToJavaObject(getJsonFile("user/response_getUserInfo_id_3.json"), UserInfo.class);
         when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri(anyString())).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}", "3")).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(responseSpecMock.bodyToFlux(UserInfo.class)).thenReturn(Flux.just(buildUserInfo()));
+        when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
+        when(responseSpecMock.onStatus(Mockito.any(Predicate.class), Mockito.any(Function.class))).thenCallRealMethod();
+        when(responseSpecMock.bodyToFlux(UserInfo.class)).thenReturn(Flux.just(userInfoJson));
 
         //When
         final var userInfo = this.userService.getUserInfo("3")
@@ -112,60 +116,28 @@ class UserServiceTest {
         assertNotNull(userInfo);
         Assertions.assertThat(userInfo)
                 .usingRecursiveComparison()
-                .isEqualTo(this.buildUserInfo());
+                .isEqualTo(userInfoJson);
     }
 
     @Test
     void get_users_list_test() {
         //Given
+        final var usersJson = parseToJavaObject(getJsonFile("user/response_getAllUsers.json"), User[].class);
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
         when(this.requestHeadersUriSpecMock.uri(anyString())).thenReturn(requestHeadersSpecMock);
         when(this.requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(this.responseSpecMock.bodyToFlux(User.class)).thenReturn(Flux.just(this.buildUser()));
-        when(this.userInfoMapper.mapToUser(any())).thenReturn(buildUserVO());
+        when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
+        when(responseSpecMock.onStatus(Mockito.any(Predicate.class), Mockito.any(Function.class))).thenCallRealMethod();
+        when(this.responseSpecMock.bodyToFlux(User.class)).thenReturn(Flux.just(usersJson));
+        when(this.userInfoMapper.mapToUser(any(User.class))).thenReturn(new UserVO("3","Clementine Bauch", "Samantha", "Nathan@yesenia.net"));
 
         //When
-        final var users = this.userService.getUsers()
-                .blockLast();
+        final var users = this.userService.getUsers().blockLast();
 
         //Then
         assertNotNull(users);
         Assertions.assertThat(users)
                 .usingRecursiveComparison()
-                .isEqualTo(this.buildUserVO());
-    }
-
-
-
-    private UserInfo buildUserInfo() {
-        return new UserInfo("3", "Clementine Bauch", "Nathan@yesenia.net",
-                new Address("Douglas Extension", "Suite 847", "McKenziehaven", "59590-4157",
-                        new Geolocation("-68.6102", "-47.0653")), "1-463-123-4447", "ramiro.info",
-                new Company("Romaguera-Jacobson", "Face to face bifurcated interface", "e-enable strategic applications"));
-    }
-
-    private Post buildPostInfo() {
-        return new Post("3", "21", "asperiores ea ipsam voluptatibus modi minima quia sint", "repellat aliquid praesentium dolorem quo\\nsed totam minus non itaque\\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\\ntempora et tenetur expedita sunt");
-    }
-
-    private Album buildAlbumInfo() {
-        return new Album("3", "21", "epudiandae voluptatem optio est consequatur rem in temporibus et");
-    }
-
-    private UserInfoVO buildUserInfoVO() {
-        return new UserInfoVO("3", "Clementine Bauch", "Nathan@yesenia.net",
-                new AddressVO("Douglas Extension", "Suite 847", "McKenziehaven", "59590-4157",
-                        new GeolocationVO("-68.6102", "-47.0653")), "1-463-123-4447", "ramiro.info",
-                new CompanyVO("Romaguera-Jacobson", "", "Face to face bifurcated interface"),
-                List.of(new AlbumVO("3", "21", "epudiandae voluptatem optio est consequatur rem in temporibus et")),
-                List.of(new PostVO("3", "21", "asperiores ea ipsam voluptatibus modi minima quia sint", "repellat aliquid praesentium dolorem quo\\nsed totam minus non itaque\\nnihil labore molestiae sunt dolor eveniet hic recusandae veniam\\ntempora et tenetur expedita sunt"))
-        );
-    }
-
-    private User buildUser() {
-        return new User("1", "Leanne Graham", "Sincere@april.biz");
-    }
-    private UserVO buildUserVO() {
-        return new UserVO("1", "Leanne Graham", "Sincere@april.biz");
+                .isEqualTo(userInfoMapper.mapToUser(Arrays.stream(usersJson).toList().get(2)));
     }
 }

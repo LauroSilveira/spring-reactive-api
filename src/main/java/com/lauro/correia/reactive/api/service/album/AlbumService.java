@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface AlbumService {
 
-    Mono<List<Album>> getAlbumInfo(String id, WebClient webClient);
+    Mono<List<Album>> getAlbumInfo(String id);
 }
