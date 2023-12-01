@@ -21,7 +21,6 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-    public static final String BASE_URL = "https://jsonplaceholder.typicode.com";
     private final WebClient webClient;
     private final UserInfoMapper userInfoMapper;
     private final AlbumService albumService;
@@ -37,8 +36,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Flux<UserInfoVO> getUserInfoComplete(String id) {
         final var user = this.getUserInfo(id);
-        final var post = this.postService.getPostInfo(id, webClient);
-        final var album = this.albumService.getAlbumInfo(id, webClient);
+        final var post = this.postService.getPosts(id);
+        final var album = this.albumService.getAlbumInfo(id);
         return Flux.zip(user, post, album)
                 .map(response -> this.userInfoMapper.mapToUserInfo(response.getT1(), response.getT2(), response.getT3()))
                 .doOnNext(userInfoVO -> log.info("UserInfoVO complete: {}", userInfoVO));
@@ -67,7 +66,7 @@ public class UserServiceImpl implements UserService {
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)
                 .bodyToFlux(User.class)
-                .doOnNext(userInfo -> log.info("Received UserInfo response: [{}]", userInfo))
+                .doOnNext(users -> log.info("Received list of Users available: [{}]", users))
                 .map(this.userInfoMapper::mapToUser);
     }
 

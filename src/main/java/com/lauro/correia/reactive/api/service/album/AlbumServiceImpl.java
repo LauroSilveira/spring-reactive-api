@@ -18,9 +18,15 @@ import java.util.List;
 @Slf4j
 public class AlbumServiceImpl implements AlbumService {
 
+    private final WebClient webClient;
+
+    public AlbumServiceImpl(WebClient webClient) {
+        this.webClient = webClient;
+    }
+
 
     @Override
-    public Mono<List<Album>> getAlbumInfo(String id, WebClient webClient) {
+    public Mono<List<Album>> getAlbumInfo(String id) {
         log.info("[UserServiceImpl] - Getting UserAlbum for id: [{}]", id);
         return webClient.get()
                 .uri("/users/{id}/albums", id)

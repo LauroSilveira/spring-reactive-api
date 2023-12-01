@@ -23,7 +23,7 @@ public class UserInfoController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<UserInfoVO> getUserInfo(@PathVariable("id") String id) {
-        log.info("[UserInfoController] getuserInfo for Id: [{}]", id);
+        log.info("[UserInfoController] getUserInfo for Id: [{}]", id);
         return this.userService.getUserInfoComplete(id);
     }
 
