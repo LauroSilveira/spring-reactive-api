@@ -12,20 +12,19 @@ import java.util.List;
 
 @Configuration
 public class SpringdocConfiguration {
-  @Bean
-  public OpenAPI customOpenAPI() {
-    return new OpenAPI()
-            .servers(List.of(new Server().url("/").description("Default")))
-        .info(new Info().title("spring-reactive-api")
-            .description("An reactive API using Spring WebFlux")
-            .contact(new Contact()
-                .name("Lauro Correia")
-                .email("lauro.silveira@outlook.com.br"))
-            .license(new License()
-                .name("Apache 2.0")
-                .url("http://voll.med/api/licenca")
-            )
-        );
-  }
-
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .servers(List.of(new Server().url("/").description("Default Server")))
+                .info(new Info().title("spring-reactive-api")
+                        .description("An reactive API using Spring WebFlux")
+                        .contact(new Contact()
+                                .name("Lauro Correia")
+                                .email("lauro.silveira@outlook.com.br"))
+                        .license(new License()
+                                .name("Apache 2.0")
+                                .url("http://voll.med/api/licenca")
+                        )
+                );
+    }
 }
