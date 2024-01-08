@@ -1,6 +1,11 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
     name: reactive-api
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
