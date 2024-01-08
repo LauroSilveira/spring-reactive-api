@@ -5,7 +5,7 @@ RUN mvn clean package -DskipTests
 
 # Run application
 FROM eclipse-temurin:21-alpine
-VOLUME /tmp
+WORKDIR /reactive-api
 COPY --from=build target/*.jar  reactive-api.jar
 EXPOSE 8080
 
