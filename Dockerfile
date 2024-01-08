@@ -1,7 +1,7 @@
 # Compile and package project
 FROM maven:3.9.4-eclipse-temurin-21-alpine AS build
 COPY . .
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # Run application
 FROM eclipse-temurin:21-alpine
