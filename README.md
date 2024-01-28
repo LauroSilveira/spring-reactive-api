@@ -14,7 +14,7 @@
 To learn more about asynchronous programming I decided to create an API using Spring WebFlux.
 But what does this API do? Basically, there are currently two endpoints to list all users and another to obtain complete user information with their books, albums and posts.
 All the information comes from the website https://jsonplaceholder.typicode.com which returns fictitious data.
-It is possible to access this API through the url https://spring-reactive-api.onrender.com/swagger-ui.html, as it is online at render.com.
+It is possible to access this API through the url https://spring-reactive-api-production.up.railway.app/webjars/swagger-ui/index.html, as it is online at render.com.
 Please, if you try to access and the service is unavailable, contact me to reactivate it.
 
 ### Setup
