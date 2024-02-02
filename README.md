@@ -14,8 +14,7 @@
 To learn more about asynchronous programming I decided to create an API using Spring WebFlux.
 But what does this API do? Basically, there are currently two endpoints to list all users and another to obtain complete user information with their books, albums and posts.
 All the information comes from the website https://jsonplaceholder.typicode.com which returns fictitious data.
-It is possible to access this API through the url https://spring-reactive-api.onrender.com/swagger-ui.html, as it is online at render.com.
-Please, if you try to access and the service is unavailable, contact me to reactivate it.
+It is possible to access this API through the url [spring-reactive-api-production.up.railway.app](https://spring-reactive-api-production.up.railway.app/webjars/swagger-ui/index.html).
 
 ### Setup
 
@@ -27,7 +26,7 @@ To be able to run the project locally you need to have it configured on your com
 
 ### Techinologies
 - Java 17
-- Spring Boot 3.1.5
+- Spring Boot 3.2.2
 - Spring WebFlux
 - Spring OpenAPI Doc
 - Maven 3.8.6
@@ -71,10 +70,6 @@ However, it is planned to go up.
 It is possible to see using the Jacoco reporter plugin.
 
 ![jacoco-coverage.png](data/jacoco-coverage.png)
-
-### To do List
-- [ ] Complete the missing test cases.
-- [ ] Relate user data with comments and return unified information.
 
 ## Contributors
 [@LauroSilveira](https://github.com/LauroSilveira)
