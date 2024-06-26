@@ -3,6 +3,7 @@ package com.lauro.correia.reactive.api.controller;
 import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.vo.UserInfoVO;
 import com.lauro.correia.reactive.api.vo.UserVO;
+import com.lauro.correia.reactive.model.UserInfoDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +32,7 @@ class UserInfoControllerITest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserInfoVO.class)
+                .expectBodyList(UserInfoDto.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -39,13 +40,13 @@ class UserInfoControllerITest {
         assertFalse(responseBody.isEmpty());
 
         //Since the response of userInfoController is a FLux of one element we can use .stream.findFirst()
-        var userInfoVO = responseBody.stream().findFirst().get();
+        var userInfoDto = responseBody.stream().findFirst().get();
 
-        assertNotNull(userInfoVO);
-        assertEquals("9", userInfoVO.userId());
-        assertNotNull(userInfoVO.company());
-        assertNotNull(userInfoVO.post());
-        assertNotNull(userInfoVO.album());
+        assertNotNull(userInfoDto);
+        assertEquals("9", userInfoDto.getUserId());
+        assertNotNull(userInfoDto.getCompany());
+        assertNotNull(userInfoDto.getPosts());
+        assertNotNull(userInfoDto.getAlbums());
     }
 
     @Test
@@ -57,7 +58,7 @@ class UserInfoControllerITest {
                 .expectStatus().isNotFound()
                 .expectBody(CustomMessageApiError.class)
                .value(customApiError -> {
-                  assertEquals(HttpStatus.NOT_FOUND, customApiError.getHttpStatus());
+                  assertEquals(HttpStatus.NOT_FOUND.value(), customApiError.getHttpStatus());
                   assertEquals("User Not Found", customApiError.getMsg());
                });
     }

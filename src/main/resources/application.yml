@@ -4,9 +4,3 @@ server:
 spring:
   application:
     name: reactive-api
-
-springdoc:
-  swagger-ui:
-    tags-sorter: alpha
-    operations-sorter: method
-    path: /swagger-ui.html

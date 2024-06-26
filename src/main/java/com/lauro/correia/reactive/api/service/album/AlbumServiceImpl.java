@@ -5,6 +5,7 @@ import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.album.AlbumNotFoundException;
 import com.lauro.correia.reactive.api.model.Album;
 import com.lauro.correia.reactive.api.service.user.UserServiceImpl;
+import com.lauro.correia.reactive.model.CustomMessageApiErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class AlbumServiceImpl implements AlbumService {
 
 
     @Override
-    public Mono<List<Album>> getAlbumInfo(String id) {
+    public Mono<List<Album>> getAlbums(String id) {
         log.info("[UserServiceImpl] - Getting UserAlbum for id: [{}]", id);
         return webClient.get()
                 .uri("/users/{id}/albums", id)
@@ -43,6 +44,6 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     private Mono<? extends Throwable> handleServerError(final ClientResponse response) {
-        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiError.builder().build()));
+        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiErrorDto.builder().build()));
     }
 }

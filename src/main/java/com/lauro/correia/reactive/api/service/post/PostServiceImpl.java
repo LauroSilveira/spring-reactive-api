@@ -4,9 +4,11 @@ import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.post.PostNotFoundException;
 import com.lauro.correia.reactive.api.mapper.PostCommentsMapper;
+import com.lauro.correia.reactive.api.mapper.PostMapper;
 import com.lauro.correia.reactive.api.model.Comments;
 import com.lauro.correia.reactive.api.model.Post;
-import com.lauro.correia.reactive.api.vo.CommentsVO;
+import com.lauro.correia.reactive.model.CommentDto;
+import com.lauro.correia.reactive.model.CustomMessageApiErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,12 @@ public class PostServiceImpl implements PostService {
 
     private final WebClient webClient;
     private final PostCommentsMapper postCommentsMapper;
+    private final PostMapper postMapper;
 
-    public PostServiceImpl(WebClient webclient, PostCommentsMapper postCommentsMapper) {
+    public PostServiceImpl(WebClient webclient, PostCommentsMapper postCommentsMapper, PostMapper postMapper) {
         this.webClient = webclient;
         this.postCommentsMapper = postCommentsMapper;
+        this.postMapper = postMapper;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Flux<CommentsVO> getPostCommentsByUser(String userId) {
+    public Flux<CommentDto> getPostCommentsByUser(String userId) {
         log.info("[UserServiceImpl] - Getting Post Comments by UserId: [{}]", userId);
         return this.webClient
                 .get()
@@ -54,7 +58,7 @@ public class PostServiceImpl implements PostService {
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
                 .bodyToFlux(Comments.class)
                 .doOnNext(comments -> log.info("Received Post Comments by UserId: [{}]", comments))
-                .map(this.postCommentsMapper::mapToCommentVO);
+                .map(this.postCommentsMapper::mapToCommentDto);
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse response) {
@@ -62,6 +66,6 @@ public class PostServiceImpl implements PostService {
     }
 
     private Mono<? extends Throwable> handleServerError(final ClientResponse response) {
-        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiError.builder().build()));
+        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiErrorDto.builder().build()));
     }
 }

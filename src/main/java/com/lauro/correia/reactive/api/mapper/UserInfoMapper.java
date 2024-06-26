@@ -4,19 +4,16 @@ import com.lauro.correia.reactive.api.model.Album;
 import com.lauro.correia.reactive.api.model.Post;
 import com.lauro.correia.reactive.api.model.User;
 import com.lauro.correia.reactive.api.model.UserInfo;
-import com.lauro.correia.reactive.api.vo.UserInfoVO;
-import com.lauro.correia.reactive.api.vo.UserVO;
-import org.mapstruct.InjectionStrategy;
+import com.lauro.correia.reactive.model.UserDto;
+import com.lauro.correia.reactive.model.UserInfoDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CompanyMapper.class, AlbumMapper.class, PostMapper.class, AddressMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class, AlbumMapper.class, PostMapper.class, AddressMapper.class})
 public interface UserInfoMapper {
 
-    @Mapping(source = "user.userId", target = "userId")
-    UserInfoVO mapToUserInfo(UserInfo user, List<Post> post, List<Album> album);
+    UserInfoDto mapToUserInfoDto(UserInfo user, List<Post> posts, List<Album> albums);
 
-    UserVO mapToUser(User response);
+    UserDto mapToUserDto(User response);
 }

@@ -1,0 +1,289 @@
+openapi: 3.0.3
+info:
+  title: reactive-api
+  description: Swagger definition of reactive-api
+  version: 1.0.0
+servers:
+  - url: '/'
+paths:
+  /post/{userId}:
+    get:
+      operationId: getPostsCommentsByUser
+      summary: Return Posts Comments of a specific user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The userId
+          example: '1'
+          schema:
+            type: string
+      tags:
+        - PostComments
+      responses:
+        '200':
+          $ref: "#/components/responses/Comments"
+        '404':
+          $ref: '#/components/responses/CustomMessageApiError'
+        '500':
+          $ref: '#/components/responses/CustomMessageApiError'
+  /user:
+    get:
+      operationId: getUsers
+      summary: Return a list with some information of all Users
+      tags:
+        - UserInfo
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '404':
+          $ref: '#/components/responses/CustomMessageApiError'
+        '500':
+          $ref: '#/components/responses/CustomMessageApiError'
+
+  /user/{id}:
+    get:
+      operationId: getUserInfo
+      summary: Return User information, Posts and comments of a specific user
+      tags:
+        - UserInfo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The userId
+          example: '1'
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: "#/components/responses/UserInfo"
+
+components:
+  responses:
+    Comments:
+      description: Comments of a specific user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Comments'
+    Users:
+      description: List with some information of user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Users'
+    UserInfo:
+      description: Represent All User Information with Posts and Comments
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserInfo'
+    CustomMessageApiError:
+      description: Customer message API to handle errors
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomMessageApiError'
+
+  schemas:
+    Comments:
+      description: Represent the comments made by a user
+      type: array
+      items:
+        $ref: "#/components/schemas/Comment"
+    Users:
+      description: List with a reduced information of Users
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    Comment:
+      description: Represent a comment object
+      type: object
+      properties:
+        userId:
+          type: string
+          example: '1'
+        postId:
+          type: string
+          example: '1'
+        name:
+          type: string
+          example: 'id labore ex et quam laborum'
+        email:
+          type: string
+          example: 'Eliseo@gardner.biz'
+        body:
+          type: string
+          example: 'laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis'
+      required:
+        - userId
+        - body
+        - email
+        - name
+        - postId
+    User:
+      description: Represent a User
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1'
+        name:
+          type: string
+          example: 'Eliseo gardner'
+        username:
+          type: string
+          example: 'Eliseo'
+        email:
+          type: string
+          example: 'Eliseo@gardner.biz'
+      required:
+        - id
+        - username
+        - email
+    Address:
+      description: Address information
+      type: object
+      properties:
+        street:
+          type: string
+          example: 'Kulas Light'
+        suite:
+          type: string
+          example: 'Apt. 556'
+        city:
+          type: string
+          example: 'Gwenborough'
+        zipcode:
+          type: string
+          example: '92998-3874'
+        geolocation:
+          $ref: "#/components/schemas/Geolocation"
+      required:
+        - street
+        - suite
+        - city
+        - zipcode
+        - geolocation
+    Geolocation:
+      type: object
+      description: Geolocation of Address with latitude and longitud
+      properties:
+        latitude:
+          type: string
+          example: '-37.3159'
+        longetude:
+          type: string
+          example: '81.1496'
+      required:
+        - latitude
+        - longitud
+    Company:
+      type: object
+      description: Company information of User
+      properties:
+        name:
+          type: string
+          example: 'Romaguera-Crona'
+        catchPhrase:
+          type: string
+          example: 'Multi-layered client-server neural-net'
+        bs:
+          type: string
+          example: 'harness real-time e-markets'
+      required:
+        - name
+        - bs
+        - catchPhrase
+    Album:
+      type: object
+      description: Album
+      properties:
+        userId:
+          type: string
+          example: '1'
+        albumId:
+          type: string
+          example: '1'
+        title:
+          type: string
+          example: 'quidem molestiae enim'
+      required:
+        - userId
+        - albumId
+        - title
+    Post:
+      type: object
+      description: Post
+      properties:
+        userId:
+          type: string
+          example: '1'
+        postId:
+          type: string
+          example: '1'
+        title:
+          type: string
+          example: 'et ea vero quia laudantium autem'
+        body:
+          type: string
+          example: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et 
+          cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est'
+      required:
+        - userId
+        - postId
+        - title
+        - body
+    UserInfo:
+      description: Object with User information
+      type: object
+      properties:
+        userId:
+          type: string
+          example: '1'
+        name:
+          type: string
+          example: 'Eliseo gardner'
+        email:
+          type: string
+          example: 'Nathan@yesenia.net'
+        address:
+          $ref: "#/components/schemas/Address"
+        phone:
+          type: string
+          example: '1-770-736-8031'
+        website:
+          type: string
+          example: 'hildegard.org'
+        company:
+          $ref: "#/components/schemas/Company"
+        albums:
+          type: array
+          items:
+            $ref: '#/components/schemas/Album'
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+      required:
+        - userId
+        - name
+        - address
+        - website
+        - company
+        - albums
+        - posts
+    CustomMessageApiError:
+      description: Message Error API
+      type: object
+      properties:
+        httpStatus:
+          type: integer
+          format: int32
+          example: '404'
+        msg:
+          type: string
+          example: 'Not Found'

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -14,11 +14,16 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-reactive-api</name>
 
-    <description>Demo project for Spring Boot</description>
+    <description>Spring boot API with React</description>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <package.name>com.lauro.correia.reactive</package.name>
+        <openapi.generator.version>7.5.0</openapi.generator.version>
+        <swagger-annotations.version>2.2.22</swagger-annotations.version>
+        <swagger-models.version>2.2.22</swagger-models.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     </properties>
 
     <dependencies>
@@ -36,23 +41,37 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
-            <version>2.5.0</version>
-        </dependency>
         <!-- MapStruct -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- Swagger / OpenApi -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger-models.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson-databind-nullable.version}</version>
+        </dependency>
+
         <!-- Spring Starters Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -83,7 +102,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -123,6 +141,44 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- OpenApi Maven generator -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.generator.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/spec/openapi.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <modelNameSuffix>Dto</modelNameSuffix>
+                            <apiPackage>${package.name}.api</apiPackage>
+                            <modelPackage>${package.name}.model</modelPackage>
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <configOptions>
+                                <basePackage>${package.name}</basePackage>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <delegatePattern>true</delegatePattern>
+                                <reactive>true</reactive>
+                                <useResponseEntity>false</useResponseEntity>
+                                <java8>true</java8>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Data;
+                                    @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor;
+                                    @lombok.Builder;
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
