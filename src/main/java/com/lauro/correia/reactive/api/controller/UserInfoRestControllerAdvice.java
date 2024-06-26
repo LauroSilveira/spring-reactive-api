@@ -20,7 +20,7 @@ public class UserInfoRestControllerAdvice {
     public Mono<ResponseEntity<CustomMessageApiError>> handleNotFoundException(final UserNotFoundException e) {
         log.error("[UserInfoRestControllerAdvice] handleNotFoundException");
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(CustomMessageApiError.builder()
-                .httpStatus(HttpStatus.NOT_FOUND)
+                .httpStatus(HttpStatus.NOT_FOUND.value())
                 .msg(e.getMessage())
                 .build()));
     }
@@ -30,7 +30,7 @@ public class UserInfoRestControllerAdvice {
     public Mono<ResponseEntity<CustomMessageApiError>> handleInternalServerException(final ServerErrorException ex) {
         log.error("[UserInfoRestControllerAdvice] handleInternalServerException");
         return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(CustomMessageApiError.builder()
-                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .msg(ex.getMessage())
                 .build()));
     }

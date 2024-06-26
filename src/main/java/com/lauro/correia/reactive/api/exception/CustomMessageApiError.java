@@ -10,6 +10,6 @@ import org.springframework.http.HttpStatus;
 @Builder
 public class CustomMessageApiError {
 
-    private HttpStatus httpStatus;
+    private int httpStatus;
     private String msg;
 }

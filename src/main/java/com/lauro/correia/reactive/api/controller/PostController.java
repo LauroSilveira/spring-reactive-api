@@ -1,21 +1,19 @@
 package com.lauro.correia.reactive.api.controller;
 
 
+import com.lauro.correia.reactive.api.PostApiDelegate;
 import com.lauro.correia.reactive.api.service.post.PostService;
-import com.lauro.correia.reactive.api.vo.CommentsVO;
+import com.lauro.correia.reactive.model.CommentDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 
 
 @Slf4j
 @RestController
-@RequestMapping("/post")
-public class PostController {
+public class PostController implements PostApiDelegate {
 
     private final PostService postService;
 
@@ -23,9 +21,9 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<CommentsVO> getPostsCommentsByUser(@PathVariable("userId") final String userId) {
-        log.info("[UserInfoController] getUsers");
+    @Override
+    public Flux<CommentDto> getPostsCommentsByUser(String userId, ServerWebExchange exchange) {
+        log.info("[UserInfoController] Get posts comments by user {}", userId);
         return this.postService.getPostCommentsByUser(userId);
     }
 }

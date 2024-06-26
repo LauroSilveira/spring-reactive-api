@@ -9,17 +9,15 @@ import com.lauro.correia.reactive.api.model.UserInfo;
 import com.lauro.correia.reactive.api.service.album.AlbumService;
 import com.lauro.correia.reactive.api.service.post.PostService;
 import com.lauro.correia.reactive.api.utils.JsonUtils;
-import com.lauro.correia.reactive.api.vo.UserInfoVO;
-import com.lauro.correia.reactive.api.vo.UserVO;
+import com.lauro.correia.reactive.model.UserDto;
+import com.lauro.correia.reactive.model.UserInfoDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,22 +30,22 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest extends JsonUtils {
 
-    @MockBean
+    @Mock
     private UserInfoMapper userInfoMapper;
 
-    @MockBean
+    @Mock
     private AlbumService albumService;
 
-    @MockBean
+    @Mock
     private PostService postService;
 
-    @SpyBean
+    @InjectMocks
     private UserServiceImpl userService;
 
-    @MockBean
+    @Mock
     private WebClient webClient;
 
     @Mock
@@ -62,39 +60,37 @@ class UserServiceTest extends JsonUtils {
     @Mock
     private WebClient.RequestHeadersUriSpec requestHeadersUriSpecMock;
 
-    @MockBean
+    @Mock
     private WebClientResponseSpec responseSpecMock;
 
 
     @Test
     void get_user_info_complete_test() {
         //Given
-        final var posts = parseToJavaObject(getJsonFile("post/response_getPostsByUserId_1.json"), Post[].class);
-        when(this.postService.getPosts(anyString())).thenReturn(Mono.just(Arrays.stream(posts).toList()));
-
-        final var albums = parseToJavaObject(getJsonFile("album/response_getAlbumByUserId_1.json"), Album[].class);
-        when(this.albumService.getAlbumInfo(anyString())).thenReturn(Mono.just(Arrays.stream(albums).toList()));
-
+        final var posts = parseToList(getJsonFile("post/response_getPostsByUserId_1.json"), Post.class);
+        final var albums = parseToList(getJsonFile("album/response_getAlbumByUserId_1.json"), Album.class);
         final var userInfo = parseToJavaObject(getJsonFile("user/response_getUserInfo_id_3.json"), UserInfo.class);
+        final var userInfoComplete = parseToJavaObject(getJsonFile("user/response_getUserInfoComplete_id_3.json"), UserInfoDto.class);
+
+        when(this.postService.getPosts(anyString())).thenReturn(Mono.just(posts));
+        when(this.albumService.getAlbums(anyString())).thenReturn(Mono.just(albums));
         when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
         when(requestHeadersUriSpecMock.uri("/users/{id}", "3")).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
-        when(responseSpecMock.onStatus(Mockito.any(Predicate.class), Mockito.any(Function.class))).thenCallRealMethod();
+        when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
         when(responseSpecMock.bodyToFlux(UserInfo.class)).thenReturn(Flux.just(userInfo));
-
-        final var userInfoComplete = parseToJavaObject(getJsonFile("user/response_getUserInfoComplete_id_3.json"), UserInfoVO.class);
-        when(this.userInfoMapper.mapToUserInfo(any(), anyList(), anyList())).thenReturn(userInfoComplete);
+        when(this.userInfoMapper.mapToUserInfoDto(any(), any(), anyList())).thenReturn(userInfoComplete);
 
         //When
-        final var userInfoVO = this.userService.getUserInfoComplete("3").blockLast();
+        final var userInfoDto = this.userService.getUserInfoComplete("3").blockLast();
 
         //Then
-        assertNotNull(userInfoVO);
-        assertNotNull(userInfoVO.company());
-        assertFalse(userInfoVO.album().isEmpty());
-        assertFalse(userInfoVO.post().isEmpty());
-        assertEquals("3", userInfoVO.userId());
+        assertNotNull(userInfoDto);
+        assertNotNull(userInfoDto.getCompany());
+        assertFalse(userInfoDto.getAlbums().isEmpty());
+        assertFalse(userInfoDto.getPosts().isEmpty());
+        assertEquals("3", userInfoDto.getUserId());
     }
 
     @Test
@@ -105,7 +101,7 @@ class UserServiceTest extends JsonUtils {
         when(requestHeadersUriSpecMock.uri("/users/{id}", "3")).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
-        when(responseSpecMock.onStatus(Mockito.any(Predicate.class), Mockito.any(Function.class))).thenCallRealMethod();
+        when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
         when(responseSpecMock.bodyToFlux(UserInfo.class)).thenReturn(Flux.just(userInfoJson));
 
         //When
@@ -127,9 +123,9 @@ class UserServiceTest extends JsonUtils {
         when(this.requestHeadersUriSpecMock.uri(anyString())).thenReturn(requestHeadersSpecMock);
         when(this.requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
-        when(responseSpecMock.onStatus(Mockito.any(Predicate.class), Mockito.any(Function.class))).thenCallRealMethod();
+        when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
         when(this.responseSpecMock.bodyToFlux(User.class)).thenReturn(Flux.just(usersJson));
-        when(this.userInfoMapper.mapToUser(any(User.class))).thenReturn(new UserVO("3","Clementine Bauch", "Samantha", "Nathan@yesenia.net"));
+        when(this.userInfoMapper.mapToUserDto(any(User.class))).thenReturn(new UserDto("3", "Clementine Bauch", "Nathan@yesenia.net"));
 
         //When
         final var users = this.userService.getUsers().blockLast();
@@ -138,6 +134,6 @@ class UserServiceTest extends JsonUtils {
         assertNotNull(users);
         Assertions.assertThat(users)
                 .usingRecursiveComparison()
-                .isEqualTo(userInfoMapper.mapToUser(Arrays.stream(usersJson).toList().get(2)));
+                .isEqualTo(userInfoMapper.mapToUserDto(Arrays.stream(usersJson).toList().get(2)));
     }
 }

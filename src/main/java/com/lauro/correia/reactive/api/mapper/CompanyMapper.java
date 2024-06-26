@@ -1,11 +1,10 @@
 package com.lauro.correia.reactive.api.mapper;
 
 import com.lauro.correia.reactive.api.model.Company;
-import com.lauro.correia.reactive.api.vo.CompanyVO;
-import org.mapstruct.InjectionStrategy;
+import com.lauro.correia.reactive.model.CompanyDto;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring")
 public interface CompanyMapper {
-    CompanyVO maptoCompanyVO(Company company);
+    CompanyDto maptoCompanyDto(Company company);
 }

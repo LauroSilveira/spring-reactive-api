@@ -26,7 +26,7 @@ public class AlbumServiceImpl implements AlbumService {
 
 
     @Override
-    public Mono<List<Album>> getAlbumInfo(String id) {
+    public Mono<List<Album>> getAlbums(String id) {
         log.info("[UserServiceImpl] - Getting UserAlbum for id: [{}]", id);
         return webClient.get()
                 .uri("/users/{id}/albums", id)

@@ -8,8 +8,8 @@ import com.lauro.correia.reactive.api.model.User;
 import com.lauro.correia.reactive.api.model.UserInfo;
 import com.lauro.correia.reactive.api.service.album.AlbumService;
 import com.lauro.correia.reactive.api.service.post.PostService;
-import com.lauro.correia.reactive.api.vo.UserInfoVO;
-import com.lauro.correia.reactive.api.vo.UserVO;
+import com.lauro.correia.reactive.model.UserDto;
+import com.lauro.correia.reactive.model.UserInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -34,12 +34,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Flux<UserInfoVO> getUserInfoComplete(String id) {
+    public Flux<UserInfoDto> getUserInfoComplete(String id) {
         final var user = this.getUserInfo(id);
+        final var album = this.albumService.getAlbums(id);
         final var post = this.postService.getPosts(id);
-        final var album = this.albumService.getAlbumInfo(id);
         return Flux.zip(user, post, album)
-                .map(response -> this.userInfoMapper.mapToUserInfo(response.getT1(), response.getT2(), response.getT3()))
+                .map(response -> this.userInfoMapper.mapToUserInfoDto(response.getT1(), response.getT2(), response.getT3()))
                 .doOnNext(userInfoVO -> log.info("UserInfoVO complete: {}", userInfoVO));
     }
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Flux<UserVO> getUsers() {
+    public Flux<UserDto> getUsers() {
         log.info("[UserServiceImpl] - Get All Users");
         return this.webClient.get()
                 .uri("/users")
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)
                 .bodyToFlux(User.class)
                 .doOnNext(users -> log.info("Received list of Users available: [{}]", users))
-                .map(this.userInfoMapper::mapToUser);
+                .map(this.userInfoMapper::mapToUserDto);
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse response) {
