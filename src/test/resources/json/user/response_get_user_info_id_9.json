@@ -19,7 +19,7 @@
     "catchPhrase": "Switchable contextually-based project",
     "bs": "aggregate real-time technologies"
   },
-  "album": [
+  "albums": [
     {
       "userId": "9",
       "albumId": "81",
@@ -71,7 +71,7 @@
       "title": "est vel dignissimos"
     }
   ],
-  "post": [
+  "posts": [
     {
       "userId": "9",
       "postId": "81",

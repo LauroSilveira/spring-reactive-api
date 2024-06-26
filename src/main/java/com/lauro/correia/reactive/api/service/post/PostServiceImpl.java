@@ -8,6 +8,7 @@ import com.lauro.correia.reactive.api.mapper.PostMapper;
 import com.lauro.correia.reactive.api.model.Comments;
 import com.lauro.correia.reactive.api.model.Post;
 import com.lauro.correia.reactive.model.CommentDto;
+import com.lauro.correia.reactive.model.CustomMessageApiErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,6 @@ public class PostServiceImpl implements PostService {
                 .bodyToFlux(Post.class)
                 .doOnNext(userInfo -> log.info("Received UserPost response: [{}]", userInfo))
                 .collectList();
-                //.map(post -> this.postMapper.mapToPostDto(post));
     }
 
     @Override
@@ -66,6 +66,6 @@ public class PostServiceImpl implements PostService {
     }
 
     private Mono<? extends Throwable> handleServerError(final ClientResponse response) {
-        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiError.builder().build()));
+        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiErrorDto.builder().build()));
     }
 }

@@ -8,6 +8,7 @@ import com.lauro.correia.reactive.api.model.User;
 import com.lauro.correia.reactive.api.model.UserInfo;
 import com.lauro.correia.reactive.api.service.album.AlbumService;
 import com.lauro.correia.reactive.api.service.post.PostService;
+import com.lauro.correia.reactive.model.CustomMessageApiErrorDto;
 import com.lauro.correia.reactive.model.UserDto;
 import com.lauro.correia.reactive.model.UserInfoDto;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,8 @@ public class UserServiceImpl implements UserService {
     private final AlbumService albumService;
     private final PostService postService;
 
-    public UserServiceImpl(WebClient webClient, UserInfoMapper userInfoMapper, AlbumService albumService, PostService postService) {
+    public UserServiceImpl(WebClient webClient, UserInfoMapper userInfoMapper, AlbumService albumService,
+                           PostService postService) {
         this.webClient = webClient;
         this.userInfoMapper = userInfoMapper;
         this.albumService = albumService;
@@ -71,10 +73,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse response) {
-        return Mono.error(new UserNotFoundException("User Not Found", CustomMessageApiError.builder().build()));
+        return Mono.error(new UserNotFoundException("User Not Found", CustomMessageApiErrorDto.builder().build()));
     }
 
     private Mono<? extends Throwable> handleServerError(final ClientResponse response) {
-        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiError.builder().build()));
+        return Mono.error(new ServerErrorException("Internal Server error", CustomMessageApiErrorDto.builder().build()));
     }
 }

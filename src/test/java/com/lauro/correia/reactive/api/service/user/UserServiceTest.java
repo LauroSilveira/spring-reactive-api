@@ -125,7 +125,7 @@ class UserServiceTest extends JsonUtils {
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
         when(this.responseSpecMock.bodyToFlux(User.class)).thenReturn(Flux.just(usersJson));
-        when(this.userInfoMapper.mapToUserDto(any(User.class))).thenReturn(new UserDto("3", "Clementine Bauch", "Nathan@yesenia.net"));
+        when(this.userInfoMapper.mapToUserDto(any(User.class))).thenReturn(new UserDto("3", "Clementine Bauch", "Clementine", "Nathan@yesenia.net"));
 
         //When
         final var users = this.userService.getUsers().blockLast();

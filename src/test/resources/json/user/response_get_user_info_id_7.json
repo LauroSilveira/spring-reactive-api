@@ -19,7 +19,7 @@
     "catchPhrase": "Configurable multimedia task-force",
     "bs": "generate enterprise e-tailers"
   },
-  "album": [
+  "albums": [
     {
       "userId": "7",
       "albumId": "61",
@@ -71,7 +71,7 @@
       "title": "et deleniti unde"
     }
   ],
-  "post": [
+  "posts": [
     {
       "userId": "7",
       "postId": "61",

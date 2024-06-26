@@ -171,7 +171,12 @@
                                 <reactive>true</reactive>
                                 <useResponseEntity>false</useResponseEntity>
                                 <java8>true</java8>
-                                <additionalModelTypeAnnotations>@lombok.Data;@lombok.NoArgsConstructor;@lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Data;
+                                    @lombok.NoArgsConstructor;
+                                    @lombok.AllArgsConstructor;
+                                    @lombok.Builder;
+                                </additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>
                     </execution>

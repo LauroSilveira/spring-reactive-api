@@ -23,6 +23,10 @@ paths:
       responses:
         '200':
           $ref: "#/components/responses/Comments"
+        '404':
+          $ref: '#/components/responses/CustomMessageApiError'
+        '500':
+          $ref: '#/components/responses/CustomMessageApiError'
   /user:
     get:
       operationId: getUsers
@@ -32,6 +36,10 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Users'
+        '404':
+          $ref: '#/components/responses/CustomMessageApiError'
+        '500':
+          $ref: '#/components/responses/CustomMessageApiError'
 
   /user/{id}:
     get:
@@ -73,6 +81,12 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/UserInfo'
+    CustomMessageApiError:
+      description: Customer message API to handle errors
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomMessageApiError'
 
   schemas:
     Comments:
@@ -116,10 +130,13 @@ components:
       properties:
         id:
           type: string
+          example: '1'
+        name:
+          type: string
           example: 'Eliseo gardner'
         username:
           type: string
-          example: 'Eliseo gardner'
+          example: 'Eliseo'
         email:
           type: string
           example: 'Eliseo@gardner.biz'
@@ -259,3 +276,14 @@ components:
         - company
         - albums
         - posts
+    CustomMessageApiError:
+      description: Message Error API
+      type: object
+      properties:
+        httpStatus:
+          type: integer
+          format: int32
+          example: '404'
+        msg:
+          type: string
+          example: 'Not Found'
