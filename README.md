@@ -12,9 +12,7 @@
 
 ### Introduction
 To learn more about asynchronous programming I decided to create an API using Spring WebFlux.
-But what does this API do? Basically, there are currently two endpoints to list all users and another to obtain complete user information with their books, albums and posts.
-All the information comes from the website https://jsonplaceholder.typicode.com which returns fictitious data.
-It is possible to access this API through the url [spring-reactive-api-production.up.railway.app](https://spring-reactive-api-production.up.railway.app/webjars/swagger-ui/index.html).
+But what does this API do? Basically, there are currently three endpoints to list all users and another to obtain complete user information with their books, albums and posts.
 
 ### Setup
 
@@ -25,13 +23,13 @@ To be able to run the project locally you need to have it configured on your com
 
 
 ### Techinologies
-- Java 17
-- Spring Boot 3.2.2
+- Java 21
+- Spring Boot 3.3.1
 - Spring WebFlux
-- Spring OpenAPI Doc
+- Spring OpenAPI
+- Swagger 
 - Maven 3.8.6
 - Docker
-- Asynchronous Rest API
 - Jacoco Reporter
 - Mapstruct
 
