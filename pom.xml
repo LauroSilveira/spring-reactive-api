@@ -22,7 +22,7 @@
         <package.name>com.lauro.correia.reactive</package.name>
         <openapi.generator.version>7.8.0</openapi.generator.version>
         <swagger-annotations.version>2.2.24</swagger-annotations.version>
-        <swagger-models.version>2.2.24</swagger-models.version>
+        <swagger-models.version>2.2.26</swagger-models.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     </properties>
 
