@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.3</version>
+        <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -18,11 +18,11 @@
 
     <properties>
         <java.version>21</java.version>
-        <org.mapstruct.version>1.6.0</org.mapstruct.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <package.name>com.lauro.correia.reactive</package.name>
         <openapi.generator.version>7.8.0</openapi.generator.version>
-        <swagger-annotations.version>2.2.23</swagger-annotations.version>
-        <swagger-models.version>2.2.23</swagger-models.version>
+        <swagger-annotations.version>2.2.27</swagger-annotations.version>
+        <swagger-models.version>2.2.27</swagger-models.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
     </properties>
 
