@@ -1,9 +1,9 @@
 package com.lauro.correia.reactive.api.controller;
 
 import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
-import com.lauro.correia.reactive.api.vo.UserInfoVO;
 import com.lauro.correia.reactive.api.vo.UserVO;
 import com.lauro.correia.reactive.model.UserInfoDto;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,9 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserInfoControllerITest {
@@ -51,16 +50,16 @@ class UserInfoControllerITest {
 
     @Test
     void get_user_info_response_not_found_test() {
-       this.webTestClient.get()
+        this.webTestClient.get()
                 .uri("/user/{id}", 14)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(CustomMessageApiError.class)
-               .value(customApiError -> {
-                  assertEquals(HttpStatus.NOT_FOUND.value(), customApiError.getHttpStatus());
-                  assertEquals("User Not Found", customApiError.getMsg());
-               });
+                .value(customApiError -> {
+                    assertEquals(HttpStatus.NOT_FOUND.value(), customApiError.getHttpStatus());
+                    assertEquals("User Not Found", customApiError.getMsg());
+                });
     }
 
 
