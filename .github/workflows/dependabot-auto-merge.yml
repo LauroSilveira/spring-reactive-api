@@ -1,17 +1,17 @@
 name: Dependabot auto-merge
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
+    branches: [ 'main']
 
 permissions:
-  pull-requests: write
-  contents: write
+  contents: read
+  actions: read
+  checks: write
 
 jobs:
+  call-workflow-ci:
+    uses: ./.github/workflows/ci.yml
+    if: success()
   dependabot:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
