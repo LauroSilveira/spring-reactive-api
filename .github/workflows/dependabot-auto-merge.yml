@@ -1,25 +1,39 @@
 name: Dependabot auto-merge
-
-on: pull_request
+on:
+  pull_request:
+    branches: [ 'main']
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+  actions: read
+  checks: write
 
 jobs:
   dependabot:
-    runs-on: ubuntu-22.04
-    if: github.event.pull_request.user_login == 'dependabot[bot]' && github.repository == 'owner/my_repo'
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - name: Dependabot metadata
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Enable auto-merge for Dependabot PRs
-        if: contains(steps.metada.outputs.dependecy-names, 'my-dependency') && steps.metadata.outputs.update-type == 'version-update:semver-patch'
+
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Approve PR
+        run: gh pr checkout "$PR_URL"
+          if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
+          then
+          gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Auto Merge PR
+        if: ${{ contains(github.event.pull_request.title, 'bump') }}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
