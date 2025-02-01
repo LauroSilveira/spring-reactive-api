@@ -9,9 +9,8 @@ permissions:
   checks: write
 
 jobs:
-  call-workflow-ci:
-    uses: ./.github/workflows/ci.yml
-    if: success()
+  check:
+    if: './.github/workflows/ci.yml' == success()
   dependabot:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
