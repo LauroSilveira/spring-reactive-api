@@ -1,9 +1,8 @@
 name: Dependabot auto-merge
-on:
-  pull_request:
+on: pull_request
 
 permissions:
-  pull_requests: write
+  pull-requests: write
   contents: write
 
 jobs:
