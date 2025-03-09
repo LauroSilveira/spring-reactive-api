@@ -35,7 +35,7 @@ To be able to run the project locally you need to have it configured on your com
 
 ### Documentation
 the project is documented using Spring OpenAPI.
-This Spring Framework starter allows us to generate Swagger documentation for all endpoints, you just have to access the url http://localhost:8080/webjars/swagger-ui.html.
+This Spring Framework starter allows us to generate Swagger documentation for all endpoints.
 After access the url, you will see:
 
 ![openapi-endpoints.pgn](data/openapi-endpoints.png)

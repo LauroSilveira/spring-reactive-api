@@ -25,12 +25,10 @@ public class PostServiceImpl implements PostService {
 
     private final WebClient webClient;
     private final PostCommentsMapper postCommentsMapper;
-    private final PostMapper postMapper;
 
-    public PostServiceImpl(WebClient webclient, PostCommentsMapper postCommentsMapper, PostMapper postMapper) {
+    public PostServiceImpl(WebClient webclient, PostCommentsMapper postCommentsMapper) {
         this.webClient = webclient;
         this.postCommentsMapper = postCommentsMapper;
-        this.postMapper = postMapper;
     }
 
     @Override
