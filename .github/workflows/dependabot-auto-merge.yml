@@ -17,7 +17,7 @@ jobs:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: Enable auto-merge for Dependabot PRs
-        if: contains(steps.metadata.outputs.dependency-names, github.event.pull_request.title)
+        if: contains(steps.metadata.outputs.dependency-names, steps.metadata.outputs.dependency-names)
         run: |
           gh pr review --approve "$PR_URL"
           gh pr merge --auto --merge "$PR_URL"
