@@ -8,7 +8,7 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'owner/spring-reactive-api'
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'LauroSilveira/spring-reactive-api'
     steps:
       - name: Dependabot metadata
         id: metadata
