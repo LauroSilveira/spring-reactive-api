@@ -23,7 +23,7 @@
         <openapi.generator.version>7.14.0</openapi.generator.version>
         <swagger-annotations.version>2.2.36</swagger-annotations.version>
         <swagger-models.version>2.2.36</swagger-models.version>
-        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <jackson-databind-nullable.version>0.2.7</jackson-databind-nullable.version>
     </properties>
 
     <dependencies>
