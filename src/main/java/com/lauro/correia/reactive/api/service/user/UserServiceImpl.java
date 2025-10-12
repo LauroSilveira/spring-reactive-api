@@ -1,6 +1,5 @@
 package com.lauro.correia.reactive.api.service.user;
 
-import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
 import com.lauro.correia.reactive.api.mapper.UserInfoMapper;
@@ -11,6 +10,7 @@ import com.lauro.correia.reactive.api.service.post.PostService;
 import com.lauro.correia.reactive.model.CustomMessageApiErrorDto;
 import com.lauro.correia.reactive.model.UserDto;
 import com.lauro.correia.reactive.model.UserInfoDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -21,19 +21,12 @@ import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final WebClient webClient;
     private final UserInfoMapper userInfoMapper;
     private final AlbumService albumService;
     private final PostService postService;
-
-    public UserServiceImpl(WebClient webClient, UserInfoMapper userInfoMapper, AlbumService albumService,
-                           PostService postService) {
-        this.webClient = webClient;
-        this.userInfoMapper = userInfoMapper;
-        this.albumService = albumService;
-        this.postService = postService;
-    }
 
     @Override
     public Flux<UserInfoDto> getUserInfoComplete(String id) {

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -62,7 +61,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         final var userInfoDto = responseBody.stream().findFirst().get();
 
-        assertEquals(userInfoDtoJsonExpected.getUserId(), userInfoDto.getUserId());
+        assertEquals(userInfoDtoJsonExpected.getId(), userInfoDto.getId());
         assertEquals(userInfoDtoJsonExpected.getAlbums().size(), userInfoDto.getAlbums().size());
         assertEquals(userInfoDtoJsonExpected.getPosts().size(), userInfoDto.getPosts().size());
     }
@@ -138,7 +137,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         final var userInfoVO = responseBody.stream().findFirst().get();
 
-        assertEquals(userInfoVOJsonExpected.getUserId(), userInfoVO.getUserId());
+        assertEquals(userInfoVOJsonExpected.getId(), userInfoVO.getId());
         assertEquals(userInfoVOJsonExpected.getAlbums().size(), userInfoVO.getAlbums().size());
         assertEquals(userInfoVOJsonExpected.getPosts().size(), userInfoVO.getPosts().size());
     }
@@ -153,7 +152,7 @@ class UserInfoControllerTest extends JsonUtils {
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When
-        final  var responseBody = this.webTestClient.get()
+        final var responseBody = this.webTestClient.get()
                 .uri("/user/{id}", 9)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -168,7 +167,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         final var userInfoVO = responseBody.stream().findFirst().get();
 
-        assertEquals(userInfoVOJsonExpected.getUserId(), userInfoVO.getUserId());
+        assertEquals(userInfoVOJsonExpected.getId(), userInfoVO.getId());
         assertEquals(userInfoVOJsonExpected.getAlbums().size(), userInfoVO.getAlbums().size());
         assertEquals(userInfoVOJsonExpected.getPosts().size(), userInfoVO.getPosts().size());
     }
