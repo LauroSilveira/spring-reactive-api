@@ -6,6 +6,7 @@ import com.lauro.correia.reactive.api.exception.album.AlbumNotFoundException;
 import com.lauro.correia.reactive.api.model.Album;
 import com.lauro.correia.reactive.api.service.user.UserServiceImpl;
 import com.lauro.correia.reactive.model.CustomMessageApiErrorDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -17,14 +18,10 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AlbumServiceImpl implements AlbumService {
 
     private final WebClient webClient;
-
-    public AlbumServiceImpl(WebClient webClient) {
-        this.webClient = webClient;
-    }
-
 
     @Override
     public Mono<List<Album>> getAlbums(String id) {

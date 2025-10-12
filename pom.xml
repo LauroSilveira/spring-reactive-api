@@ -24,6 +24,8 @@
         <swagger-annotations.version>2.2.38</swagger-annotations.version>
         <swagger-models.version>2.2.38</swagger-models.version>
         <jackson-databind-nullable.version>0.2.7</jackson-databind-nullable.version>
+        <wiremock.version>3.10.0</wiremock.version>
+        <instanctio.version>5.5.1</instanctio.version>
     </properties>
 
     <dependencies>
@@ -82,6 +84,13 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Wiremock -->
+        <dependency>
+            <groupId>org.wiremock.integrations</groupId>
+            <artifactId>wiremock-spring-boot</artifactId>
+            <version>${wiremock.version}</version>
         </dependency>
     </dependencies>
 

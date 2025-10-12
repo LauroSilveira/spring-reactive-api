@@ -103,7 +103,7 @@ components:
       description: Represent a comment object
       type: object
       properties:
-        userId:
+        id:
           type: string
           example: '1'
         postId:
@@ -119,7 +119,7 @@ components:
           type: string
           example: 'laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis'
       required:
-        - userId
+        - id
         - body
         - email
         - name
@@ -202,27 +202,27 @@ components:
       type: object
       description: Album
       properties:
-        userId:
+        id:
           type: string
           example: '1'
-        albumId:
+        userId:
           type: string
           example: '1'
         title:
           type: string
           example: 'quidem molestiae enim'
       required:
+        - id
         - userId
-        - albumId
         - title
     Post:
       type: object
       description: Post
       properties:
-        userId:
+        id:
           type: string
           example: '1'
-        postId:
+        userId:
           type: string
           example: '1'
         title:
@@ -233,15 +233,15 @@ components:
           example: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et 
           cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est'
       required:
+        - id
         - userId
-        - postId
         - title
         - body
     UserInfo:
       description: Object with User information
       type: object
       properties:
-        userId:
+        id:
           type: string
           example: '1'
         name:

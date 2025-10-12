@@ -90,7 +90,7 @@ class UserServiceTest extends JsonUtils {
         assertNotNull(userInfoDto.getCompany());
         assertFalse(userInfoDto.getAlbums().isEmpty());
         assertFalse(userInfoDto.getPosts().isEmpty());
-        assertEquals("3", userInfoDto.getUserId());
+        assertEquals("3", userInfoDto.getId());
     }
 
     @Test

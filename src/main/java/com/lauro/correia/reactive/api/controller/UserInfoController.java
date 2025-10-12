@@ -20,7 +20,7 @@ public class UserInfoController implements UserApiDelegate {
     private final UserService userService;
 
     @Override
-    public Flux<UserInfoDto> getUserInfo(String id, ServerWebExchange exchange) {
+    public Flux<UserInfoDto> getUserInfo(final String id, ServerWebExchange exchange) {
         log.info("[UserInfoController] getUserInfo for Id: [{}]", id);
         return this.userService.getUserInfoComplete(id);
     }
