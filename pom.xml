@@ -24,7 +24,7 @@
         <swagger-annotations.version>2.2.39</swagger-annotations.version>
         <swagger-models.version>2.2.39</swagger-models.version>
         <jackson-databind-nullable.version>0.2.7</jackson-databind-nullable.version>
-        <wiremock.version>3.10.0</wiremock.version>
+        <wiremock.version>3.10.6</wiremock.version>
         <instanctio.version>5.5.1</instanctio.version>
     </properties>
 
