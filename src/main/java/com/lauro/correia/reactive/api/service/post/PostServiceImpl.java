@@ -9,6 +9,7 @@ import com.lauro.correia.reactive.api.model.Comments;
 import com.lauro.correia.reactive.api.model.Post;
 import com.lauro.correia.reactive.model.CommentDto;
 import com.lauro.correia.reactive.model.CustomMessageApiErrorDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,11 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
     private final WebClient webClient;
     private final PostCommentsMapper postCommentsMapper;
-
-    public PostServiceImpl(WebClient webclient, PostCommentsMapper postCommentsMapper) {
-        this.webClient = webclient;
-        this.postCommentsMapper = postCommentsMapper;
-    }
 
     @Override
     public Mono<List<Post>> getPosts(String id) {
