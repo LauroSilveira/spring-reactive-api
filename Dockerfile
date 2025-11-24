@@ -1,5 +1,5 @@
 # Compile and package project
-FROM maven:3-eclipse-temurin-24-alpine AS build
+FROM maven:3-eclipse-temurin-25-alpine AS build
 COPY . .
 RUN mvn clean package -DskipTests
 
