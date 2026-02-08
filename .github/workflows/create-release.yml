@@ -1,28 +1,29 @@
 name: Create Release
+
 on:
   pull_request:
     types:
       - closed
+
 jobs:
   release:
     name: Semantic Release
     runs-on: ubuntu-latest
     if: >
       github.event.pull_request.merged == true &&
-           contains(github.event.pull_request.labels.*.name, 'release')
+      contains(github.event.pull_request.labels.*.name, 'release')
     permissions:
       contents: write
     steps:
-      - name: Checkout branch Master
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Create version bump
+      - name: Determine version bump
         id: bump
         run: |
           LABELS="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
-          
+
           if [[ "$LABELS" == *"major"* ]]; then
             echo "level=major" >> $GITHUB_OUTPUT
           elif [[ "$LABELS" == *"minor"* ]]; then
@@ -43,10 +44,10 @@ jobs:
         run: |
           TAG=${{ steps.latest.outputs.tag }}
           LEVEL=${{ steps.bump.outputs.level }}
-          
+
           VERSION=${TAG#v}
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
-          
+
           if [[ "$LEVEL" == "major" ]]; then
             MAJOR=$((MAJOR+1))
             MINOR=0
@@ -57,11 +58,16 @@ jobs:
           else
             PATCH=$((PATCH+1))
           fi
+
+          NEXT="v$MAJOR.$MINOR.$PATCH"
+          echo "version=$NEXT" >> $GITHUB_OUTPUT
+
       - name: Generate release notes
         id: notes
         run: |
           git log ${{ steps.latest.outputs.tag }}..HEAD \
             --pretty=format:"- %s (%h)" > notes.txt
+
       - name: Create GitHub Release
         run: |
           gh release create \
