@@ -48,7 +48,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         //When
         final var responseBody = this.webTestClient.get()
-                .uri("/user/{id}", 7)
+                .uri("/users/{id}", 7)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -79,7 +79,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         //When
         this.webTestClient.get()
-                .uri("/user/{id}", 21)
+                .uri("/users/{id}", 21)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
@@ -102,7 +102,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         //When
         this.webTestClient.get()
-                .uri("/user/{id}", 21)
+                .uri("/users/{id}", 21)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is5xxServerError()
@@ -124,7 +124,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         //When
         final var responseBody = this.webTestClient.get()
-                .uri("/user/{id}", 9)
+                .uri("/users/{id}", 9)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -154,7 +154,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         //When
         final var responseBody = this.webTestClient.get()
-                .uri("/user/{id}", 9)
+                .uri("/users/{id}", 9)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -183,7 +183,7 @@ class UserInfoControllerTest extends JsonUtils {
 
         //When
         final var responseBody = this.webTestClient.get()
-                .uri("/user")
+                .uri("/users")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
