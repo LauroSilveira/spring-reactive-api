@@ -29,10 +29,10 @@ public class UserServiceImpl implements UserService {
     private final PostService postService;
 
     @Override
-    public Flux<UserInfoDto> getUserInfoComplete(String id) {
+    public Flux<UserInfoDto> getUserInfoComplete(final Long id) {
         final var user = this.getUserInfo(id);
-        final var album = this.albumService.getAlbums(id);
-        final var post = this.postService.getPosts(id);
+        final var album = this.albumService.getUserAlbumById(id);
+        final var post = this.postService.getUserPostById(id);
         return Flux.zip(user, post, album)
                 .map(response -> this.userInfoMapper.mapToUserInfoDto(response.getT1(), response.getT2(), response.getT3()))
                 .doOnNext(userInfoVO -> log.info("UserInfoVO complete: {}", userInfoVO));
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Flux<UserInfo> getUserInfo(String id) {
+    public Flux<UserInfo> getUserInfo(final Long id) {
         log.info("[UserServiceImpl] - Getting UserInfo for id: [{}]", id);
         return this.webClient
                 .get()

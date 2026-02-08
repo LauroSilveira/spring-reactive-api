@@ -1,7 +1,8 @@
 package com.lauro.correia.reactive.api.controller;
 
-import com.lauro.correia.reactive.api.UserApiController;
-import com.lauro.correia.reactive.api.UserApiDelegate;
+
+import com.lauro.correia.reactive.api.UsersApiController;
+import com.lauro.correia.reactive.api.UsersApiDelegate;
 import com.lauro.correia.reactive.api.exception.CustomMessageApiError;
 import com.lauro.correia.reactive.api.exception.ServerErrorException;
 import com.lauro.correia.reactive.api.exception.user.UserNotFoundException;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -23,11 +24,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(controllers = {UserApiDelegate.class, UserApiController.class})
+@WebFluxTest(controllers = {UsersApiDelegate.class, UsersApiController.class})
 class UserInfoControllerTest extends JsonUtils {
 
     @Autowired
@@ -42,7 +43,7 @@ class UserInfoControllerTest extends JsonUtils {
         //Given
         final var userInfoDtoJsonExpected = parseToJavaObject(getJsonFile("user/response_get_user_info_id_7.json"), UserInfoDto.class);
 
-        when(this.userService.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyLong()))
                 .thenReturn(Flux.just(userInfoDtoJsonExpected));
 
         //When
@@ -70,7 +71,7 @@ class UserInfoControllerTest extends JsonUtils {
     @DisplayName("Should return User Not Found")
     void should_return_not_found_test() {
         //Given
-        when(this.userService.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyLong()))
                 .thenReturn(Flux.error(new UserNotFoundException("User Not Found", CustomMessageApiErrorDto.builder()
                         .msg("User Not Found")
                         .httpStatus(HttpStatus.NOT_FOUND.value())
@@ -93,7 +94,7 @@ class UserInfoControllerTest extends JsonUtils {
     @DisplayName("Return Internal Server Error")
     void should_return_internal_server_error_test() {
         //Given
-        when(this.userService.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyLong()))
                 .thenReturn(Flux.error(new ServerErrorException("Internal Server Error", CustomMessageApiErrorDto.builder()
                         .msg("Internal Server Error")
                         .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -118,7 +119,7 @@ class UserInfoControllerTest extends JsonUtils {
         //Given
         final var userInfoVOJsonExpected = parseToJavaObject(getJsonFile("user/response_get_user_info_id_9.json"), UserInfoDto.class);
 
-        when(this.userService.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyLong()))
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When
@@ -148,7 +149,7 @@ class UserInfoControllerTest extends JsonUtils {
         //Given
         final var userInfoVOJsonExpected = parseToJavaObject(getJsonFile("user/response_get_user_info_id_3.json"), UserInfoDto.class);
 
-        when(this.userService.getUserInfoComplete(anyString()))
+        when(this.userService.getUserInfoComplete(anyLong()))
                 .thenReturn(Flux.just(userInfoVOJsonExpected));
 
         //When

@@ -29,7 +29,7 @@ public class PostServiceImpl implements PostService {
     private final PostCommentsMapper postCommentsMapper;
 
     @Override
-    public Mono<List<Post>> getPosts(String id) {
+    public Mono<List<Post>> getUserPostById(final Long id) {
         log.info("[UserServiceImpl] - Getting UserPost for id: [{}]", id);
         return this.webClient
                 .get()
@@ -43,7 +43,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Flux<CommentDto> getPostCommentsByUser(String userId) {
+    public Flux<CommentDto> getPostCommentsByUser(final Long userId) {
         log.info("[UserServiceImpl] - Getting Post Comments by UserId: [{}]", userId);
         return this.webClient
                 .get()

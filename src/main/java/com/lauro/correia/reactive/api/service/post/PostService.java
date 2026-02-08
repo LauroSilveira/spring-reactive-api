@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface PostService {
-    Mono<List<Post>>  getPosts(String id);
+    Mono<List<Post>> getUserPostById(Long id);
 
-    Flux<CommentDto> getPostCommentsByUser(String userId);
+    Flux<CommentDto> getPostCommentsByUser(Long userId);
 }

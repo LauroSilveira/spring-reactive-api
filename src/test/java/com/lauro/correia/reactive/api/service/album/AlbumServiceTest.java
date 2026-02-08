@@ -58,14 +58,14 @@ class AlbumServiceTest extends JsonUtils {
         //Given
         final var albumsJson = parseToJavaObject(getJsonFile("album/response_get_albums_for_useId_1.json"), Album[].class);
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/users/{id}/albums", "1")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}/albums", 1L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
         when(responseSpecMock.bodyToFlux(Album.class)).thenReturn(Flux.just(albumsJson));
 
         //When
-        final var albums = this.albumService.getAlbums("1").block();
+        final var albums = this.albumService.getUserAlbumById(1L).block();
 
         //Then
         assertNotNull(albums);
@@ -80,27 +80,27 @@ class AlbumServiceTest extends JsonUtils {
     void get_album_info_should_return_httpStatus_5xx() {
         //Given
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/users/{id}/albums", "1")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}/albums", 1L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.INTERNAL_SERVER_ERROR);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
 
         //When
         assertThrows(ServerErrorException.class, () ->
-                this.albumService.getAlbums("1").block());
+                this.albumService.getUserAlbumById(1L).block());
     }
 
     @Test
     void get_album_info_should_return_httpStatus_4xx() {
         //Given
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/users/{id}/albums", "1")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}/albums", 1L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.NOT_FOUND);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
 
         //When
         assertThrows(AlbumNotFoundException.class, () ->
-                this.albumService.getAlbums("1").block());
+                this.albumService.getUserAlbumById(1L).block());
     }
 }
