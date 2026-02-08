@@ -72,10 +72,10 @@ class UserServiceTest extends JsonUtils {
         final var userInfo = parseToJavaObject(getJsonFile("user/response_getUserInfo_id_3.json"), UserInfo.class);
         final var userInfoComplete = parseToJavaObject(getJsonFile("user/response_getUserInfoComplete_id_3.json"), UserInfoDto.class);
 
-        when(this.postService.getPosts(anyString())).thenReturn(Mono.just(posts));
-        when(this.albumService.getAlbums(anyString())).thenReturn(Mono.just(albums));
+        when(this.postService.getUserPostById(anyLong())).thenReturn(Mono.just(posts));
+        when(this.albumService.getUserAlbumById(anyLong())).thenReturn(Mono.just(albums));
         when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/users/{id}", "3")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}", 3L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
@@ -83,7 +83,7 @@ class UserServiceTest extends JsonUtils {
         when(this.userInfoMapper.mapToUserInfoDto(any(), any(), anyList())).thenReturn(userInfoComplete);
 
         //When
-        final var userInfoDto = this.userService.getUserInfoComplete("3").blockLast();
+        final var userInfoDto = this.userService.getUserInfoComplete(3L).blockLast();
 
         //Then
         assertNotNull(userInfoDto);
@@ -98,14 +98,14 @@ class UserServiceTest extends JsonUtils {
         //Given
         final var userInfoJson = parseToJavaObject(getJsonFile("user/response_getUserInfo_id_3.json"), UserInfo.class);
         when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/users/{id}", "3")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}", 3L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
         when(responseSpecMock.bodyToFlux(UserInfo.class)).thenReturn(Flux.just(userInfoJson));
 
         //When
-        final var userInfo = this.userService.getUserInfo("3")
+        final var userInfo = this.userService.getUserInfo(3L)
                 .blockLast();
 
         //Then

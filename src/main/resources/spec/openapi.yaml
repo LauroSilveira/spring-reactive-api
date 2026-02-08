@@ -6,7 +6,7 @@ info:
 servers:
   - url: '/'
 paths:
-  /post/{userId}:
+  /posts/comments/{userId}:
     get:
       operationId: getPostsCommentsByUser
       summary: Return Posts Comments of a specific user
@@ -15,9 +15,11 @@ paths:
           in: path
           required: true
           description: The userId
-          example: '1'
+          example: 1
           schema:
-            type: string
+            type: integer
+            format: int64
+            nullable: false
       tags:
         - PostComments
       responses:
@@ -27,7 +29,7 @@ paths:
           $ref: '#/components/responses/CustomMessageApiError'
         '500':
           $ref: '#/components/responses/CustomMessageApiError'
-  /user:
+  /users:
     get:
       operationId: getUsers
       summary: Return a list with some information of all Users
@@ -41,7 +43,7 @@ paths:
         '500':
           $ref: '#/components/responses/CustomMessageApiError'
 
-  /user/{id}:
+  /users/{id}:
     get:
       operationId: getUserInfo
       summary: Return User information, Posts and comments of a specific user
@@ -52,9 +54,11 @@ paths:
           in: path
           required: true
           description: The userId
-          example: '1'
+          example: 1
           schema:
-            type: string
+            type: integer
+            format: int64
+            nullable: false
       responses:
         '200':
           $ref: "#/components/responses/UserInfo"

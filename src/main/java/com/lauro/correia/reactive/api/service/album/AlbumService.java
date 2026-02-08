@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AlbumService {
 
-    Mono<List<Album>> getAlbums(String id);
+    Mono<List<Album>> getUserAlbumById(final Long id);
 }

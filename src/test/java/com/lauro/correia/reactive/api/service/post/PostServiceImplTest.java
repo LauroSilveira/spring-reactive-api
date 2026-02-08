@@ -62,14 +62,14 @@ class PostServiceImplTest extends JsonUtils {
         final var jsonResponseExpected = parseToJavaObject(getJsonFile("post/response_getPostsByUserId_1.json"), Post[].class);
 
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/users/{id}/posts", "1")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/users/{id}/posts", 1L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
         when(responseSpecMock.bodyToFlux(Post.class)).thenReturn(Flux.fromIterable(List.of(jsonResponseExpected)));
 
         //When
-        var posts = this.postService.getPosts("1").block();
+        var posts = this.postService.getUserPostById(1L).block();
 
         //Then
         assertThat(posts).isNotEmpty();
@@ -84,14 +84,14 @@ class PostServiceImplTest extends JsonUtils {
 
 
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/posts/{userId}/comments", "1")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/posts/{userId}/comments", 1L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.OK);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
-        when(responseSpecMock.bodyToFlux(Comments.class)).thenReturn(Flux.fromIterable(List.of( jsonResponseExpected)));
+        when(responseSpecMock.bodyToFlux(Comments.class)).thenReturn(Flux.fromIterable(List.of(jsonResponseExpected)));
 
         //When
-        var commentsVO = this.postService.getPostCommentsByUser("1").collectList().block();
+        var commentsVO = this.postService.getPostCommentsByUser(1L).collectList().block();
 
         //Then
         assertThat(commentsVO).isNotNull()
@@ -105,27 +105,27 @@ class PostServiceImplTest extends JsonUtils {
     void get_post_comments_by_user_should_return_httpStatus_5xx() {
         //Given
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/posts/{userId}/comments", "1")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/posts/{userId}/comments", 1L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.INTERNAL_SERVER_ERROR);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
 
         //When
         Assertions.assertThrows(ServerErrorException.class, () ->
-                this.postService.getPostCommentsByUser("1").collectList().block());
+                this.postService.getPostCommentsByUser(1L).collectList().block());
     }
 
     @Test
     void get_post_comments_by_user_should_return_httpStatus_4xx() {
         //Given
         when(this.webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri("/posts/{userId}/comments", "1")).thenReturn(requestHeadersSpecMock);
+        when(requestHeadersUriSpecMock.uri("/posts/{userId}/comments", 1L)).thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
         when(responseSpecMock.getStatus()).thenReturn(HttpStatus.NOT_FOUND);
         when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenCallRealMethod();
 
         //When
         Assertions.assertThrows(PostNotFoundException.class, () ->
-                this.postService.getPostCommentsByUser("1").collectList().block());
+                this.postService.getPostCommentsByUser(1L).collectList().block());
     }
 }

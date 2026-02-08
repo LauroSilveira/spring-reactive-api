@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 
 public interface UserService {
 
-    Flux<UserInfoDto> getUserInfoComplete(String id);
-    Flux<UserInfo> getUserInfo(String id);
+    Flux<UserInfoDto> getUserInfoComplete(Long id);
+    Flux<UserInfo> getUserInfo(Long id);
     Flux<UserDto> getUsers();
 }
