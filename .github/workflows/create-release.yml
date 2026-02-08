@@ -2,25 +2,70 @@ name: Create Release
 on:
   pull_request:
     types:
-      - labeled
+      - closed
 jobs:
-  build:
-    name: Create Release
-    if: ${{ github.event.label.name == 'release'}}
+  release:
+    name: Semantic Release
     runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.merged == true && github.event.label.name == 'release'
+    permissions:
+      contents: write
     steps:
       - name: Checkout branch Master
-        uses: actions/checkout@master
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create version bump
+        id: bump
+        run: |
+          LABELS="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
+          
+          if [[ "$LABELS" == *"major"* ]]; then
+            echo "level=major" >> $GITHUB_OUTPUT
+          elif [[ "$LABELS" == *"minor"* ]]; then
+            echo "level=minor" >> $GITHUB_OUTPUT
+          else
+            echo "level=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get latest tag
+        id: latest
+        run: |
+          git fetch --tags
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Calculate next version
+        id: version
+        run: |
+          TAG=${{ steps.latest.outputs.tag }}
+          LEVEL=${{ steps.bump.outputs.level }}
+          
+          VERSION=${TAG#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          
+          if [[ "$LEVEL" == "major" ]]; then
+            MAJOR=$((MAJOR+1))
+            MINOR=0
+            PATCH=0
+          elif [[ "$LEVEL" == "minor" ]]; then
+            MINOR=$((MINOR+1))
+            PATCH=0
+          else
+            PATCH=$((PATCH+1))
+          fi
+      - name: Generate release notes
+        id: notes
+        run: |
+          git log ${{ steps.latest.outputs.tag }}..HEAD \
+            --pretty=format:"- %s (%h)" > notes.txt
+      - name: Create GitHub Release
+        run: |
+          gh release create \
+            ${{ steps.version.outputs.version }} \
+            --title "Release ${{ steps.version.outputs.version }}" \
+            --notes-file notes.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - ${{ github.event.head_commit.message }}
-          draft: false
-          prerelease: false
