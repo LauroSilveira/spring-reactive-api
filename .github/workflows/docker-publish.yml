@@ -2,7 +2,8 @@ name: Publish Docker Image to Docker Hub
 run-name: ${{ github.actor }} has started publish docker image
 on:
   pull_request:
-    types: [ labeled ]
+    types:
+      - labeled
 jobs:
   docker:
     if: ${{ github.event.label.name == 'release'}}
