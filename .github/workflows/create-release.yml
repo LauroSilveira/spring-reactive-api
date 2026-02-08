@@ -1,7 +1,8 @@
 name: Create Release
 on:
   pull_request:
-    types: [ labeled ]
+    types:
+      - labeled
 jobs:
   build:
     name: Create Release
