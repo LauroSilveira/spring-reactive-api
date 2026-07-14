@@ -23,7 +23,7 @@
         <openapi.generator.version>7.18.0</openapi.generator.version>
         <swagger-annotations.version>2.2.52</swagger-annotations.version>
         <swagger-models.version>2.2.52</swagger-models.version>
-        <jackson-databind-nullable.version>0.2.8</jackson-databind-nullable.version>
+        <jackson-databind-nullable.version>0.2.10</jackson-databind-nullable.version>
         <wiremock.version>4.2.2</wiremock.version>
         <instanctio.version>5.5.1</instanctio.version>
     </properties>
